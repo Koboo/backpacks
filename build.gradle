@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.0.0'
+    id 'net.kyori.blossom' version '1.2.0'
+}
+
+group = "$projectGroup"
+version = "$projectVersion"
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        url 'https://reposilite.koboo.eu/releases'
+    }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT'
+    compileOnly 'com.mojang:authlib:3.11.50'
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+
+    compileOnly "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
+    annotationProcessor "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    options.fork = true
+    options.incremental = true
+    options.encoding = 'UTF-8'
+    options.release.set(17)
+}
+
+blossom {
+    replaceToken('PROJECT_NAME', project.name)
+    replaceToken('PROJECT_VERSION', project.version)
+    replaceToken('PROJECT_GROUP', projectGroup)
+    replaceToken('PROJECT_DESCRIPTION', projectDescription)
+    replaceToken('PROJECT_WEBSITE', projectWebsite)
+}
