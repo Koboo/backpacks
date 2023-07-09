@@ -99,7 +99,7 @@ public class ListenerOpenClose implements Listener {
         if (inventoryName == null) {
             inventoryName = Component.text("Backpack");
         }
-        Inventory inventory = Bukkit.createInventory(player, 27, inventoryName);
+        Inventory inventory = Bukkit.createInventory(player, plugin.getBackpackConfig().getSize().getSlotAmount(), inventoryName);
 
         if (itemMeta != null) {
             PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();

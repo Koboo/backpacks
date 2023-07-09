@@ -13,10 +13,18 @@ import lombok.experimental.FieldDefaults;
 public class Restrictions {
 
     @YamlKey("limit-amount-in-player-inventory")
-    @YamlCommandHead({"Use this option to limit the amount of backpacks", "a player can put into his inventory.", "", "-1 = no limit/max backpacks"})
+    @YamlCommandHead({
+            "Use this option to limit the amount of backpacks",
+            "a player can put into his inventory.",
+            "",
+            "-1 = no limit/max backpacks"
+    })
     int maxPlayerInventoryAmount = 2;
 
     @YamlKey("allow-backpack-in-backpack")
-    @YamlCommandHead({"Use this option to decide if a player", "can put a backpack in a backpack in a backpack and so on.."})
+    @YamlCommandHead({
+            "Use this option to decide if a player",
+            "can put a backpack in a backpack in a backpack and so on.."
+    })
     boolean allowRecursion = false;
 }
