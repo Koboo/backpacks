@@ -14,6 +14,22 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Config {
 
+    @YamlKey("discover-all-recipes")
+    @YamlCommandHead({
+            "This option decides if the player should",
+            "discover all backpack recipes after he joined the server."
+    })
+    boolean discoverAllRecipes = true;
+
+    @YamlKey("default-backpack-size")
+    @YamlCommandHead({
+            "This option sets the size of all backpacks.",
+            "The value describes the amount of columns like chests.",
+            "Values:",
+            "ONE, TWO, THREE, FOUR, FIVE, SIX"
+    })
+    BackpackSize size = BackpackSize.THREE;
+
     @YamlEmbedded("restrictions")
     @YamlCommandHead({
             "Restrict the usage of the backpacks",
@@ -28,20 +44,12 @@ public class Config {
     })
     Appearance appearance = new Appearance();
 
-    @YamlKey("discover-all-recipes")
+    @YamlEmbedded("crafting")
     @YamlCommandHead({
-            "This option decides if the player should",
-            "discover all backpack recipes after he joined the server."
+            "Change the crafting recipe of the backpack",
+            "See here for the item/material list:",
+            "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html"
     })
-    boolean discoverAllRecipes = true;
-
-    @YamlKey("backpack-size")
-    @YamlCommandHead({
-            "This option sets the size of all backpacks.",
-            "The value describes the amount of columns like chests.",
-            "Values:",
-            "ONE, TWO, THREE, FOUR, FIVE, SIX"
-    })
-    BackpackSize size = BackpackSize.THREE;
+    Crafting crafting = new Crafting();
 
 }
