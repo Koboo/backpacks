@@ -29,9 +29,6 @@ public class ListenerCancelDrag implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            return;
-        }
         ItemStack cursorItem = event.getOldCursor();
         if (!plugin.isBackpack(cursorItem)) {
             return;

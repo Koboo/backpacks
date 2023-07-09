@@ -32,9 +32,6 @@ public class ListenerLimitAmount implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            return;
-        }
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
         if (maxAmount <= -1) {
             return;

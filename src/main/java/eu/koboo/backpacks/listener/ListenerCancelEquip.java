@@ -31,9 +31,6 @@ public class ListenerCancelEquip implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            return;
-        }
         Inventory inventory = event.getInventory();
         InventoryType type = inventory.getType();
         if (type != InventoryType.CRAFTING) {

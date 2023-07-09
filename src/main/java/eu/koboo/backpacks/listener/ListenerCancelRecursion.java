@@ -32,9 +32,6 @@ public class ListenerCancelRecursion implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if (player.getGameMode() != GameMode.SURVIVAL) {
-            return;
-        }
         if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {
             return;
         }
