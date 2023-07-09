@@ -87,6 +87,6 @@ public enum BackpackColor {
     BackpackColor(String value, Material material) {
         this.value = value;
         this.material = material;
-        this.key = NamespacedKey.fromString("backpack_recipe_" + name().toLowerCase(Locale.ROOT), BackpackPlugin.getPlugin());
+        this.key = NamespacedKey.fromString(BackpackPlugin.RECIPE_KEY_PREFIX + "_" + name().toLowerCase(Locale.ROOT), BackpackPlugin.getPlugin());
     }
 }
