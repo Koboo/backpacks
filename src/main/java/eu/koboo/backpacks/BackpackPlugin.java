@@ -4,6 +4,7 @@ import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.listener.*;
 import eu.koboo.backpacks.utils.BackpackColor;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
@@ -55,11 +56,12 @@ public class BackpackPlugin extends JavaPlugin {
     public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
     /* TODO:
-        - Fix number key pressing
+        - Fix number key pressing cancelling
         - Create option for only owner opening
-        - Customizable crafting recipe
         - Disable backpacks in worlds by name
         - Close backpack if player gets damage
+        - Shulker box handling
+        - blacklisted items in backpacks
 
     */
 
@@ -99,6 +101,14 @@ public class BackpackPlugin extends JavaPlugin {
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
         createRecipes();
+
+        Bukkit.getPluginManager().registerEvents(new ListenerCancelDrag(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerCancelRecursion(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerDiscoverRecipes(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerItemCraft(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerLimitAmount(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerOpenClose(this), this);
 
         super.onEnable();
     }
