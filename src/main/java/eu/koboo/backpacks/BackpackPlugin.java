@@ -1,0 +1,319 @@
+package eu.koboo.backpacks;
+
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
+import com.jeff_media.morepersistentdatatypes.DataType;
+import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.utils.BackpackColor;
+import eu.koboo.backpacks.utils.InventoryUtils;
+import eu.koboo.backpacks.utils.ItemUtils;
+import eu.koboo.yaml.config.ConfigurationLoader;
+import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.PluginLoadOrder;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.plugin.*;
+import org.bukkit.plugin.java.annotation.plugin.author.Author;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Level;
+
+@Plugin(name = "PROJECT_NAME", version = "PROJECT_VERSION")
+@ApiVersion(ApiVersion.Target.v1_20)
+@Author("PROJECT_GROUP")
+@Description("PROJECT_DESCRIPTION")
+@LoadOrder(PluginLoadOrder.POSTWORLD)
+@Website("PROJECT_WEBSITE")
+@SuppressWarnings("all")
+public class BackpackPlugin extends JavaPlugin {
+
+    @Getter
+    private static BackpackPlugin plugin;
+
+    // If player has put a backpack into that inventories, he will collect another backpack,
+    // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
+    public static final List<InventoryType> INVENTORY_TYPES_ADDED_AFTER_CLOSE = Arrays.asList(
+            InventoryType.WORKBENCH, InventoryType.CRAFTING, InventoryType.ANVIL,
+            InventoryType.ENCHANTING, InventoryType.STONECUTTER
+    );
+
+
+    ConfigurationLoader configurationLoader;
+
+    @Getter
+    Config backpackConfig;
+
+    @Getter
+    NamespacedKey itemIdentifierKey;
+    @Getter
+    NamespacedKey itemUnstackableKey;
+    @Getter
+    NamespacedKey itemContentKey;
+    @Getter
+    NamespacedKey rootBackpackRecipeKey;
+    @Getter
+    NamespacedKey openBackpackKey;
+
+    @Override
+    public void onEnable() {
+        plugin = this;
+        getDataFolder().mkdirs();
+
+        configurationLoader = new ConfigurationLoader();
+
+        File configFile = createConfigFile();
+        loadConfigFile(configFile);
+
+        itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
+        itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
+        itemContentKey = NamespacedKey.fromString("backpack_content", this);
+        rootBackpackRecipeKey = NamespacedKey.fromString("backpack_recipe", this);
+        openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
+
+        ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.BROWN));
+        rootBackpackRecipe.shape(
+                "LLL",
+                "SDS",
+                "LLL"
+        );
+        rootBackpackRecipe.setIngredient('L', Material.LEATHER);
+        rootBackpackRecipe.setIngredient('S', Material.LEAD);
+        rootBackpackRecipe.setIngredient('D', Material.DIAMOND);
+        rootBackpackRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
+        Bukkit.getServer().addRecipe(rootBackpackRecipe);
+
+        if (backpackConfig.getAppearance().isAllowDifferentColors()) {
+            for (BackpackColor color : BackpackColor.values()) {
+                ShapelessRecipe colorRecipe = new ShapelessRecipe(color.getKey(), createBackpack(color));
+                colorRecipe.addIngredient(1, Material.PLAYER_HEAD);
+                colorRecipe.addIngredient(1, color.getMaterial());
+                colorRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
+                Bukkit.getServer().addRecipe(colorRecipe);
+            }
+        }
+
+        super.onEnable();
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+    }
+
+    public File createConfigFile() {
+        return new File(getDataFolder(), "config.yml");
+    }
+
+    public void loadConfigFile(File configFile) {
+        try {
+            if (!configFile.exists()) {
+                configurationLoader.saveToFile(new Config(), configFile);
+                getLogger().log(Level.INFO, "Exported default configuration!");
+            }
+            backpackConfig = configurationLoader.loadFromFile(Config.class, configFile);
+
+            configurationLoader.saveToFile(backpackConfig, configFile);
+        } catch (IOException e) {
+            getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
+            Bukkit.getPluginManager().disablePlugin(this);
+        }
+    }
+
+    public ItemStack createBackpack(BackpackColor color) {
+        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+
+        PlayerProfile playerProfile = Bukkit.createProfile(UUID.randomUUID());
+        playerProfile.getProperties().add(new ProfileProperty("textures", color.getValue()));
+
+        skullMeta.setPlayerProfile(playerProfile);
+
+        String backpackName = backpackConfig.getAppearance().getDefaultBackpackName();
+        skullMeta.displayName(LegacyComponentSerializer.legacySection().deserialize(backpackName));
+
+        PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
+        pdc.set(itemIdentifierKey, PersistentDataType.BOOLEAN, true);
+
+        head.setItemMeta(skullMeta);
+        return head;
+    }
+
+    public boolean isBackpack(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        if (itemStack.getType() != Material.PLAYER_HEAD) {
+            return false;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        }
+        Component component = itemMeta.displayName();
+        if (component == null) {
+            return false;
+        }
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        return pdc.has(itemIdentifierKey, PersistentDataType.BOOLEAN);
+    }
+
+    public UUID getBackpackId(ItemStack itemStack) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return null;
+        }
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+        return pdc.get(itemUnstackableKey, DataType.UUID);
+    }
+
+    public ItemStack findItemByBackpackId(Player player, UUID backpackId) {
+        ItemStack backpackItem = null;
+        Inventory bottomInventory = player.getOpenInventory().getBottomInventory();
+        for (ItemStack content : bottomInventory.getContents()) {
+            if (content == null || content.getType() != Material.PLAYER_HEAD) {
+                continue;
+            }
+            UUID contentId = getBackpackId(content);
+            if (!contentId.equals(backpackId)) {
+                continue;
+            }
+            backpackItem = content;
+            break;
+        }
+        return backpackItem;
+    }
+
+    public void saveBackpack(Player player, Inventory inventory, UUID backpackId) {
+
+        // Search for the backpack item by the id
+        ItemStack backpackItem = findItemByBackpackId(player, backpackId);
+        if (backpackItem == null) {
+            return;
+        }
+
+        String contentBase64 = ItemUtils.toBase64(inventory);
+
+        ItemMeta itemMeta = backpackItem.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        // Getting previous content of backapck
+        String previousContent = pdc.get(itemContentKey, PersistentDataType.STRING);
+        // Same serialized content, ignoring
+        if (previousContent != null
+                && !previousContent.isEmpty()
+                && previousContent.equals(contentBase64)) {
+            return;
+        }
+
+        // Setting the new serialized content
+        pdc.set(itemContentKey, PersistentDataType.STRING, contentBase64);
+        backpackItem.setItemMeta(itemMeta);
+
+        // Resetting the open backpack id
+        setOpenBackpackId(player, null);
+    }
+
+    public UUID getOpenBackpackId(Player player) {
+        // Getting the open backpack id from the players pdc
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        return pdc.getOrDefault(openBackpackKey, DataType.UUID, null);
+    }
+
+    public void setOpenBackpackId(Player player, UUID uuid) {
+        // Saving the open backpack id into the players pdc
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        if (uuid != null) {
+            pdc.set(openBackpackKey, DataType.UUID, uuid);
+            return;
+        }
+        // if uuid is null, we just remove it from the pdc
+        pdc.remove(openBackpackKey);
+    }
+
+    public boolean hasOpenBackback(Player player) {
+        Inventory top = player.getOpenInventory().getTopInventory();
+        if (top.getType() != InventoryType.CHEST) {
+            return false;
+        }
+        UUID backpackId = getOpenBackpackId(player);
+        if (backpackId == null) {
+            return false;
+        }
+        ItemStack itemInHand = findItemByBackpackId(player, backpackId);
+        if (!isBackpack(itemInHand)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void handleShift(Player player, int slot, ItemStack currentItem, InventoryType.SlotType slotType) {
+
+        PlayerInventory playerInventory = player.getInventory();
+        boolean freeHotbar = slotType == InventoryType.SlotType.CONTAINER;
+        int shiftSlot = InventoryUtils.findFreeSlot(playerInventory, freeHotbar);
+
+        if (shiftSlot == -1) {
+            return;
+        }
+
+        playerInventory.setItem(shiftSlot, currentItem);
+        playerInventory.setItem(slot, new ItemStack(Material.AIR));
+
+        ItemMeta metaBefore = currentItem.getItemMeta();
+        PersistentDataContainer pdcBefore = metaBefore.getPersistentDataContainer();
+        String contentBase64 = pdcBefore.get(itemContentKey, PersistentDataType.STRING);
+
+        if (contentBase64 == null || contentBase64.isEmpty()) {
+            return;
+        }
+
+        ItemStack itemAfter = playerInventory.getItem(shiftSlot);
+        ItemMeta metaAfter = itemAfter.getItemMeta();
+        PersistentDataContainer pdcAfter = metaAfter.getPersistentDataContainer();
+        pdcAfter.set(itemContentKey, PersistentDataType.STRING, contentBase64);
+        itemAfter.setItemMeta(metaAfter);
+    }
+
+    public int countBackpacks(Player player) {
+        int count = 0;
+        InventoryView view = player.getOpenInventory();
+        count += countBackpacks(view.getBottomInventory());
+        Inventory topInventory = view.getTopInventory();
+        if (INVENTORY_TYPES_ADDED_AFTER_CLOSE.contains(topInventory.getType())) {
+            int topCount = countBackpacks(topInventory);
+            count += topCount;
+        }
+        return count;
+    }
+
+    private int countBackpacks(Inventory inventory) {
+        int count = 0;
+        for (ItemStack content : inventory.getContents()) {
+            if (content == null || content.getType() == Material.AIR) {
+                continue;
+            }
+            if (!isBackpack(content)) {
+                continue;
+            }
+            count += 1;
+        }
+        return count;
+    }
+}
