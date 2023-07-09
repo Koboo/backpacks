@@ -52,7 +52,16 @@ public class BackpackPlugin extends JavaPlugin {
             InventoryType.WORKBENCH, InventoryType.CRAFTING, InventoryType.ANVIL,
             InventoryType.ENCHANTING, InventoryType.STONECUTTER
     );
+    public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
+    /* TODO:
+        - Fix number key pressing
+        - Create option for only owner opening
+        - Customizable crafting recipe
+        - Disable backpacks in worlds by name
+        - Close backpack if player gets damage
+
+    */
 
     ConfigurationLoader configurationLoader;
 
@@ -65,6 +74,8 @@ public class BackpackPlugin extends JavaPlugin {
     NamespacedKey itemUnstackableKey;
     @Getter
     NamespacedKey itemContentKey;
+    @Getter
+    NamespacedKey itemSizeKey;
     @Getter
     NamespacedKey rootBackpackRecipeKey;
     @Getter
@@ -83,7 +94,8 @@ public class BackpackPlugin extends JavaPlugin {
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
         itemContentKey = NamespacedKey.fromString("backpack_content", this);
-        rootBackpackRecipeKey = NamespacedKey.fromString("backpack_recipe", this);
+        itemSizeKey = NamespacedKey.fromString("backpack_size", this);
+        rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
         ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.BROWN));
@@ -136,9 +148,9 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public ItemStack createBackpack(BackpackColor color) {
-        ItemStack head = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack headItem = new ItemStack(Material.PLAYER_HEAD);
 
-        SkullMeta skullMeta = (SkullMeta) head.getItemMeta();
+        SkullMeta skullMeta = (SkullMeta) headItem.getItemMeta();
 
         PlayerProfile playerProfile = Bukkit.createProfile(UUID.randomUUID());
         playerProfile.getProperties().add(new ProfileProperty("textures", color.getValue()));
@@ -150,9 +162,10 @@ public class BackpackPlugin extends JavaPlugin {
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
         pdc.set(itemIdentifierKey, PersistentDataType.BOOLEAN, true);
+        pdc.set(itemSizeKey, PersistentDataType.STRING, backpackConfig.getSize().name());
 
-        head.setItemMeta(skullMeta);
-        return head;
+        headItem.setItemMeta(skullMeta);
+        return headItem;
     }
 
     public boolean isBackpack(ItemStack itemStack) {
@@ -174,7 +187,7 @@ public class BackpackPlugin extends JavaPlugin {
         return pdc.has(itemIdentifierKey, PersistentDataType.BOOLEAN);
     }
 
-    public UUID getBackpackId(ItemStack itemStack) {
+    public UUID getBackpackIdByItem(ItemStack itemStack) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta == null) {
             return null;
@@ -183,14 +196,14 @@ public class BackpackPlugin extends JavaPlugin {
         return pdc.get(itemUnstackableKey, DataType.UUID);
     }
 
-    public ItemStack findItemByBackpackId(Player player, UUID backpackId) {
+    public ItemStack findBackpackById(Player player, UUID backpackId) {
         ItemStack backpackItem = null;
         Inventory bottomInventory = player.getOpenInventory().getBottomInventory();
         for (ItemStack content : bottomInventory.getContents()) {
             if (content == null || content.getType() != Material.PLAYER_HEAD) {
                 continue;
             }
-            UUID contentId = getBackpackId(content);
+            UUID contentId = getBackpackIdByItem(content);
             if (!contentId.equals(backpackId)) {
                 continue;
             }
@@ -198,36 +211,6 @@ public class BackpackPlugin extends JavaPlugin {
             break;
         }
         return backpackItem;
-    }
-
-    public void saveBackpack(Player player, Inventory inventory, UUID backpackId) {
-
-        // Search for the backpack item by the id
-        ItemStack backpackItem = findItemByBackpackId(player, backpackId);
-        if (backpackItem == null) {
-            return;
-        }
-
-        String contentBase64 = ItemUtils.toBase64(inventory);
-
-        ItemMeta itemMeta = backpackItem.getItemMeta();
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-
-        // Getting previous content of backapck
-        String previousContent = pdc.get(itemContentKey, PersistentDataType.STRING);
-        // Same serialized content, ignoring
-        if (previousContent != null
-                && !previousContent.isEmpty()
-                && previousContent.equals(contentBase64)) {
-            return;
-        }
-
-        // Setting the new serialized content
-        pdc.set(itemContentKey, PersistentDataType.STRING, contentBase64);
-        backpackItem.setItemMeta(itemMeta);
-
-        // Resetting the open backpack id
-        setOpenBackpackId(player, null);
     }
 
     public UUID getOpenBackpackId(Player player) {
@@ -256,7 +239,7 @@ public class BackpackPlugin extends JavaPlugin {
         if (backpackId == null) {
             return false;
         }
-        ItemStack itemInHand = findItemByBackpackId(player, backpackId);
+        ItemStack itemInHand = findBackpackById(player, backpackId);
         if (!isBackpack(itemInHand)) {
             return false;
         }
@@ -276,6 +259,7 @@ public class BackpackPlugin extends JavaPlugin {
         playerInventory.setItem(shiftSlot, currentItem);
         playerInventory.setItem(slot, new ItemStack(Material.AIR));
 
+        /*
         ItemMeta metaBefore = currentItem.getItemMeta();
         PersistentDataContainer pdcBefore = metaBefore.getPersistentDataContainer();
         String contentBase64 = pdcBefore.get(itemContentKey, PersistentDataType.STRING);
@@ -289,6 +273,7 @@ public class BackpackPlugin extends JavaPlugin {
         PersistentDataContainer pdcAfter = metaAfter.getPersistentDataContainer();
         pdcAfter.set(itemContentKey, PersistentDataType.STRING, contentBase64);
         itemAfter.setItemMeta(metaAfter);
+        */
     }
 
     public int countBackpacks(Player player) {
