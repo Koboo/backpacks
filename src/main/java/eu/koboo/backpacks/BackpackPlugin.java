@@ -6,7 +6,6 @@ import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.utils.BackpackColor;
 import eu.koboo.backpacks.utils.InventoryUtils;
-import eu.koboo.backpacks.utils.ItemUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -31,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -98,27 +98,7 @@ public class BackpackPlugin extends JavaPlugin {
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
-        ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.BROWN));
-        rootBackpackRecipe.shape(
-                "LLL",
-                "SDS",
-                "LLL"
-        );
-        rootBackpackRecipe.setIngredient('L', Material.LEATHER);
-        rootBackpackRecipe.setIngredient('S', Material.LEAD);
-        rootBackpackRecipe.setIngredient('D', Material.DIAMOND);
-        rootBackpackRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
-        Bukkit.getServer().addRecipe(rootBackpackRecipe);
-
-        if (backpackConfig.getAppearance().isAllowDifferentColors()) {
-            for (BackpackColor color : BackpackColor.values()) {
-                ShapelessRecipe colorRecipe = new ShapelessRecipe(color.getKey(), createBackpack(color));
-                colorRecipe.addIngredient(1, Material.PLAYER_HEAD);
-                colorRecipe.addIngredient(1, color.getMaterial());
-                colorRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
-                Bukkit.getServer().addRecipe(colorRecipe);
-            }
-        }
+        createRecipes();
 
         super.onEnable();
     }
@@ -144,6 +124,49 @@ public class BackpackPlugin extends JavaPlugin {
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
             Bukkit.getPluginManager().disablePlugin(this);
+        }
+    }
+
+    public void createRecipes() {
+        if(!backpackConfig.getCrafting().isAllowCrafting()) {
+            return;
+        }
+        Bukkit.removeRecipe(rootBackpackRecipeKey);
+
+        List<String> craftingPattern = backpackConfig.getCrafting().getCraftingPattern();
+        if(craftingPattern.isEmpty()) {
+            throw new RuntimeException("Couldn't create crafting recipe, no recipe pattern provided");
+        }
+        if(craftingPattern.size() > 3) {
+            throw new RuntimeException("Couldn't create crafting recipe, recipe pattern has more than 3 lines");
+        }
+
+        ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.BROWN));
+        rootBackpackRecipe.shape(
+                craftingPattern.get(0),
+                craftingPattern.get(1),
+                craftingPattern.get(2)
+        );
+        for (String materialLine : backpackConfig.getCrafting().getItemList()) {
+            String[] lineSplit = materialLine.split(":");
+            String charKey = lineSplit[0];
+            Material material = Material.valueOf(lineSplit[1].toUpperCase(Locale.ROOT));
+            rootBackpackRecipe.setIngredient(charKey.charAt(0), material);
+        }
+        rootBackpackRecipe.setCategory(backpackConfig.getCrafting().getCategory());
+        Bukkit.addRecipe(rootBackpackRecipe);
+
+        boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
+        for (BackpackColor color : BackpackColor.values()) {
+            Bukkit.removeRecipe(color.getRecipeKey());
+            if(!allowDifferentColors) {
+                continue;
+            }
+            ShapelessRecipe colorRecipe = new ShapelessRecipe(color.getRecipeKey(), createBackpack(color));
+            colorRecipe.addIngredient(1, Material.PLAYER_HEAD);
+            colorRecipe.addIngredient(1, color.getMaterial());
+            colorRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
+            Bukkit.addRecipe(colorRecipe);
         }
     }
 

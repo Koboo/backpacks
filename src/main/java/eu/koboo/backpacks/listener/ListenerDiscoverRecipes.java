@@ -31,7 +31,7 @@ public class ListenerDiscoverRecipes implements Listener {
         this.backpackRecipeList = new ArrayList<>();
 
         List<String> backpackColorRecipeNameList = Arrays.stream(BackpackColor.values())
-                .map(BackpackColor::getKey)
+                .map(BackpackColor::getRecipeKey)
                 .map(NamespacedKey::toString)
                 .toList();
 
@@ -53,6 +53,9 @@ public class ListenerDiscoverRecipes implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (!plugin.getBackpackConfig().isDiscoverAllRecipes()) {
+            return;
+        }
+        if (!plugin.getBackpackConfig().getCrafting().isAllowCrafting()) {
             return;
         }
         Player player = event.getPlayer();

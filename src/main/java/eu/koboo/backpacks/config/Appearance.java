@@ -12,12 +12,13 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Appearance {
 
-    @YamlKey("allow-different-colors")
+    @YamlKey("allow-backpack-coloring")
     @YamlCommandHead({
-            "Enabled this option to allow",
-            "crafting different backpack colors with dye."
+            "Enabling this option allows the player",
+            "to craft different backpack colors by combining",
+            "any dye with a backpack."
     })
-    boolean allowDifferentColors = true;
+    boolean allowColoring = true;
 
     @YamlKey("default-backpack-name")
     @YamlCommandHead({
