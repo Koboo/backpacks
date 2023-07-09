@@ -14,13 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Config {
 
-    @YamlKey("discover-all-recipes")
-    @YamlCommandHead({
-            "This option decides if the player should",
-            "discover all backpack recipes after he joined the server."
-    })
-    boolean discoverAllRecipes = true;
-
     @YamlKey("default-backpack-size")
     @YamlCommandHead({
             "This option sets the size of all backpacks.",
@@ -46,9 +39,7 @@ public class Config {
 
     @YamlEmbedded("crafting")
     @YamlCommandHead({
-            "Change the crafting recipe of the backpack",
-            "See here for the item/material list:",
-            "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html"
+            "Change the crafting recipe of the backpack.",
     })
     Crafting crafting = new Crafting();
 

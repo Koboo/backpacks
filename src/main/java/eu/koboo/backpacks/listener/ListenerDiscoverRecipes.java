@@ -52,7 +52,7 @@ public class ListenerDiscoverRecipes implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
-        if (!plugin.getBackpackConfig().isDiscoverAllRecipes()) {
+        if (!plugin.getBackpackConfig().getCrafting().isDiscoverAllRecipes()) {
             return;
         }
         if (!plugin.getBackpackConfig().getCrafting().isAllowCrafting()) {
