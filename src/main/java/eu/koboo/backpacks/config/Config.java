@@ -1,9 +1,8 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.backpacks.utils.BackpackSize;
+import eu.koboo.backpacks.config.appearance.Appearance;
 import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlEmbedded;
-import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,12 +37,12 @@ public class Config {
     @YamlCommentHead({
             "Change the messages of the plugin."
     })
-    Message message = new Message();
+    Messages messages = new Messages();
 
     @YamlEmbedded("permissions")
     @YamlCommentHead({
             "Change the permissions of the plugin."
     })
-    Permission permission = new Permission();
+    Permissions permissions = new Permissions();
 
 }
