@@ -15,7 +15,9 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.BlockInventoryHolder;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -67,6 +69,7 @@ public class ListenerLimitAmount implements Listener {
         event.setCancelled(true);
     }
 
+    // Cancel pickup of backpacks if players exceeds limit
     @EventHandler
     public void onPickup(EntityPickupItemEvent event) {
         if (event.isCancelled()) {
@@ -95,24 +98,41 @@ public class ListenerLimitAmount implements Listener {
         if (!(event.getPlayer() instanceof Player player)) {
             return;
         }
+        // Check if user wants the limit restriction
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
         if (maxAmount <= -1) {
             return;
         }
+        // Check the total backpacks in the players inventory exceeds the set limit
         int countedBackpacks = plugin.countBackpacks(player);
         if (countedBackpacks <= maxAmount) {
             return;
         }
+
+        // Check if the items from the inventory gets added to the players inventory after closing
+        Inventory topInventory = player.getOpenInventory().getTopInventory();
+        InventoryType inventoryType = topInventory.getType();
+        if(!BackpackPlugin.INVENTORY_TYPES_ADDED_AFTER_CLOSE.contains(inventoryType)) {
+            return;
+        }
+
+        // Check if the player has the backpack still on its cursor and if so drop it
+        ItemStack onCursor = player.getItemOnCursor();
+        if(plugin.isBackpack(onCursor)) {
+            player.getWorld().dropItem(player.getLocation(), onCursor);
+            player.setItemOnCursor(new ItemStack(Material.AIR));
+            return;
+        }
+
+        // Check how many backpacks are too much and check every item from the top inventory
+        // and drop them until we reached the max amount of the player inventory
         int overflow = countedBackpacks - maxAmount;
-        for (ItemStack content : player.getInventory().getContents()) {
-            if (content == null) {
-                continue;
-            }
-            if (!plugin.isBackpack(content)) {
+        for (ItemStack content : topInventory.getContents()) {
+            if (content == null || !plugin.isBackpack(content)) {
                 continue;
             }
             Location location = player.getLocation();
-            if (player.getOpenInventory().getTopInventory().getHolder() instanceof BlockInventoryHolder holder) {
+            if (topInventory.getHolder() instanceof BlockInventoryHolder holder) {
                 location = holder.getBlock().getLocation();
             }
             player.getWorld().dropItem(location, content);
