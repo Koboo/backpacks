@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -128,10 +127,10 @@ public class ListenerOpenClose implements Listener {
         if(backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
             if(ownerId != null) {
-                if(!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpackPermission())
+                if(!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
                     player.sendMessage(LegacyComponentSerializer.legacySection()
-                            .deserialize(backpackConfig.getMessages().getNotAllowedOpenMessage()));
+                            .deserialize(backpackConfig.getMessages().getNotAllowedToOpen()));
                     return;
                 }
             }
