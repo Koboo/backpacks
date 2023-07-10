@@ -202,18 +202,11 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public boolean isBackpack(ItemStack itemStack) {
-        if (itemStack == null) {
-            return false;
-        }
-        if (itemStack.getType() != Material.PLAYER_HEAD) {
+        if (itemStack == null || itemStack.getType() != Material.PLAYER_HEAD || itemStack.getAmount() == 0) {
             return false;
         }
         ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta == null) {
-            return false;
-        }
-        Component component = itemMeta.displayName();
-        if (component == null) {
+        if (itemMeta == null || !itemMeta.hasDisplayName()) {
             return false;
         }
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
