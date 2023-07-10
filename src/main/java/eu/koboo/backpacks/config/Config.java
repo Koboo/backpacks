@@ -14,15 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Config {
 
-    @YamlKey("default-backpack-size")
-    @YamlCommandHead({
-            "This option sets the size of all backpacks.",
-            "The value describes the amount of columns like chests.",
-            "Values:",
-            "ONE, TWO, THREE, FOUR, FIVE, SIX"
-    })
-    BackpackSize size = BackpackSize.THREE;
-
     @YamlEmbedded("restrictions")
     @YamlCommandHead({
             "Restrict the usage of the backpacks",
