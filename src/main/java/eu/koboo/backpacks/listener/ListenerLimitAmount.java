@@ -22,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class ListenerLimitAmount implements Listener {
 
     BackpackPlugin plugin;
