@@ -7,11 +7,17 @@ import org.bukkit.Sound;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ConfigSound {
 
     Sound sound;
     float volume;
     float pitch;
+
+    public static ConfigSound of(Sound sound, float volume, float pitch) {
+        ConfigSound configSound = new ConfigSound();
+        configSound.setSound(sound);
+        configSound.setVolume(volume);
+        configSound.setPitch(pitch);
+        return configSound;
+    }
 }

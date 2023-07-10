@@ -31,11 +31,11 @@ public class Sounds {
     @YamlCommentHead({
             "The sound, that should play if the player OPENS a backpack."
     })
-    ConfigSound openSound = new ConfigSound(Sound.BLOCK_CHEST_OPEN, 0.5f, 0.5f);
+    ConfigSound openSound = ConfigSound.of(Sound.BLOCK_CHEST_OPEN, 0.5f, 0.5f);
 
     @YamlEmbedded("close-sound")
     @YamlCommentHead({
             "The sound, that should play if the player CLOSES a backpack."
     })
-    ConfigSound closeSound = new ConfigSound(Sound.BLOCK_CHEST_CLOSE, 0.5f, 0.5f);
+    ConfigSound closeSound = ConfigSound.of(Sound.BLOCK_CHEST_CLOSE, 0.5f, 0.5f);
 }
