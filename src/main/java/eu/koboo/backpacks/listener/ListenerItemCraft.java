@@ -31,7 +31,7 @@ public class ListenerItemCraft implements Listener {
 
     // Make backpacks craft-able and unstackable
     @EventHandler
-    public void onCraft(PrepareItemCraftEvent event) {
+    public void onCraftBackpack(PrepareItemCraftEvent event) {
         CraftingInventory inventory = event.getInventory();
         ItemStack resultItem = inventory.getResult();
         if (resultItem == null) {

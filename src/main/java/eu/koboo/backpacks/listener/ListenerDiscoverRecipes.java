@@ -17,7 +17,7 @@ public class ListenerDiscoverRecipes implements Listener {
     BackpackPlugin plugin;
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoinBackpack(PlayerJoinEvent event) {
         if (!plugin.getBackpackConfig().getCrafting().isDiscoverAllRecipes()) {
             return;
         }

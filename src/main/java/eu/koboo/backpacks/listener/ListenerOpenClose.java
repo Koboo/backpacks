@@ -44,7 +44,7 @@ public class ListenerOpenClose implements Listener {
 
     // Handle backpack open event
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onInteractBackpack(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR) {
             return;
         }
@@ -68,7 +68,7 @@ public class ListenerOpenClose implements Listener {
 
     // Handle backpack place (right-click on block)
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
+    public void onPlaceBackpack(BlockPlaceEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -81,8 +81,8 @@ public class ListenerOpenClose implements Listener {
     }
 
     // Handle backpack close event
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onInventoryClose(InventoryCloseEvent event) {
+    @EventHandler
+    public void onCloseBackpack(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) {
             return;
         }
@@ -94,10 +94,51 @@ public class ListenerOpenClose implements Listener {
         if (backpackId == null) {
             return;
         }
-        saveBackpack(player, event.getInventory(), backpackId);
+
+        // Search for the backpack item by the id
+        ItemStack backpackItem = plugin.findBackpackById(player, backpackId);
+        if (backpackItem == null) {
+            return;
+        }
+
+        String contentBase64 = ItemUtils.toBase64(event.getInventory());
+
+        ItemMeta itemMeta = backpackItem.getItemMeta();
+        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        // Getting previous content of backapck
+        String previousContent = pdc.get(plugin.getItemContentKey(), PersistentDataType.STRING);
+        // Same serialized content, ignoring
+        if (previousContent != null
+                && !previousContent.isEmpty()
+                && previousContent.equals(contentBase64)) {
+            return;
+        }
+
+        // Setting the new serialized content
+        pdc.set(plugin.getItemContentKey(), PersistentDataType.STRING, contentBase64);
+        backpackItem.setItemMeta(itemMeta);
+
+        // Resetting the open backpack id
+        plugin.setOpenBackpackId(player, null);
+
+        Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
+        if(sounds.isUseSounds()) {
+            ConfigSound closeSound = sounds.getCloseSound();
+            if(sounds.isOnlyPlayerSounds()) {
+                player.playSound(
+                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
+                );
+            } else {
+                player.getWorld().playSound(
+                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
+                );
+            }
+        }
+
     }
 
-    public void openBackpack(Player player, ItemStack backpackItem) {
+    private void openBackpack(Player player, ItemStack backpackItem) {
         if(backpackItem == null) {
             return;
         }
@@ -173,50 +214,6 @@ public class ListenerOpenClose implements Listener {
             } else {
                 player.getWorld().playSound(
                         player.getLocation(), openSound.getSound(), openSound.getVolume(), openSound.getPitch()
-                );
-            }
-        }
-    }
-
-    public void saveBackpack(Player player, Inventory inventory, UUID backpackId) {
-
-        // Search for the backpack item by the id
-        ItemStack backpackItem = plugin.findBackpackById(player, backpackId);
-        if (backpackItem == null) {
-            return;
-        }
-
-        String contentBase64 = ItemUtils.toBase64(inventory);
-
-        ItemMeta itemMeta = backpackItem.getItemMeta();
-        PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-
-        // Getting previous content of backapck
-        String previousContent = pdc.get(plugin.getItemContentKey(), PersistentDataType.STRING);
-        // Same serialized content, ignoring
-        if (previousContent != null
-                && !previousContent.isEmpty()
-                && previousContent.equals(contentBase64)) {
-            return;
-        }
-
-        // Setting the new serialized content
-        pdc.set(plugin.getItemContentKey(), PersistentDataType.STRING, contentBase64);
-        backpackItem.setItemMeta(itemMeta);
-
-        // Resetting the open backpack id
-        plugin.setOpenBackpackId(player, null);
-
-        Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
-        if(sounds.isUseSounds()) {
-            ConfigSound closeSound = sounds.getCloseSound();
-            if(sounds.isOnlyPlayerSounds()) {
-                player.playSound(
-                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
-                );
-            } else {
-                player.getWorld().playSound(
-                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
                 );
             }
         }
