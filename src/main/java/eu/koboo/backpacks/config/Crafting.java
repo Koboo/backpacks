@@ -17,11 +17,11 @@ import java.util.List;
 @Getter
 public class Crafting {
 
-    @YamlKey("allow-crafting")
+    @YamlKey("create-recipes")
     @YamlCommentHead({
-            "Allow or disallow crafting of backpacks."
+            "Enable or disable the creation of crafting recipes of backpacks."
     })
-    boolean allowCrafting = true;
+    boolean createRecipes = true;
 
     @YamlKey("discover-all-recipes")
     @YamlCommentHead({
