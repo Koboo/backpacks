@@ -1,6 +1,7 @@
-package eu.koboo.backpacks.config;
+package eu.koboo.backpacks.config.appearance;
 
 import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlEmbedded;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,4 +27,13 @@ public class Appearance {
             "to allow your players more customization."
     })
     String defaultBackpackName = "Backpack";
+
+    @YamlEmbedded("sounds")
+    @YamlCommentHead({
+            "In this section you can change the sounds of the backpacks.",
+            "You can also use the command \"/playsound\" to test the sound you want.",
+            "See the list of available sounds:",
+            "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html"
+    })
+    Sounds sounds;
 }
