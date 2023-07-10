@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-public class Message {
+public class Messages {
 
     @YamlKey("not-allowed-to-open-message")
     @YamlCommentHead({

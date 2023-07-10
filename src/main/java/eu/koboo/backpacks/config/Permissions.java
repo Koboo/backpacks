@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
-public class Permission {
+public class Permissions {
 
     @YamlKey("open-every-backpack-permission")
     @YamlCommentHead({
