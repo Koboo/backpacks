@@ -9,7 +9,6 @@ import eu.koboo.backpacks.utils.BackpackColor;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.PluginLoadOrder;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.java.annotation.plugin.*;
@@ -53,6 +51,8 @@ public class BackpackPlugin extends JavaPlugin {
             InventoryType.WORKBENCH, InventoryType.CRAFTING, InventoryType.ANVIL,
             InventoryType.ENCHANTING, InventoryType.STONECUTTER
     );
+
+    // The string key of the root recipe and the key prefix of the coloured recipes
     public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
     /* TODO:
@@ -79,12 +79,22 @@ public class BackpackPlugin extends JavaPlugin {
     @Getter
     NamespacedKey itemSizeKey;
     @Getter
+    NamespacedKey itemOwnerKey;
+    @Getter
     NamespacedKey rootBackpackRecipeKey;
     @Getter
     NamespacedKey openBackpackKey;
 
     @Override
     public void onEnable() {
+        try {
+            Class.forName("com.destroystokyo.paper.profile.PlayerProfile");
+        } catch (Exception e) {
+            getLogger().log(Level.WARNING, "You're not running PaperMC! Backpacks will only run on PaperMC. Shutting down..");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         plugin = this;
         getDataFolder().mkdirs();
 
@@ -97,6 +107,7 @@ public class BackpackPlugin extends JavaPlugin {
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
         itemContentKey = NamespacedKey.fromString("backpack_content", this);
         itemSizeKey = NamespacedKey.fromString("backpack_size", this);
+        itemOwnerKey = NamespacedKey.fromString("backpack_owner", this);
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
@@ -194,8 +205,8 @@ public class BackpackPlugin extends JavaPlugin {
         skullMeta.displayName(LegacyComponentSerializer.legacySection().deserialize(backpackName));
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
-        pdc.set(itemIdentifierKey, PersistentDataType.BOOLEAN, true);
-        pdc.set(itemSizeKey, PersistentDataType.STRING, backpackConfig.getSize().name());
+        pdc.set(itemIdentifierKey, DataType.BOOLEAN, true);
+        pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getSize().name());
 
         headItem.setItemMeta(skullMeta);
         return headItem;
@@ -210,7 +221,7 @@ public class BackpackPlugin extends JavaPlugin {
             return false;
         }
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-        return pdc.has(itemIdentifierKey, PersistentDataType.BOOLEAN);
+        return pdc.has(itemIdentifierKey, DataType.BOOLEAN);
     }
 
     public UUID getBackpackIdByItem(ItemStack itemStack) {
@@ -288,7 +299,7 @@ public class BackpackPlugin extends JavaPlugin {
         /*
         ItemMeta metaBefore = currentItem.getItemMeta();
         PersistentDataContainer pdcBefore = metaBefore.getPersistentDataContainer();
-        String contentBase64 = pdcBefore.get(itemContentKey, PersistentDataType.STRING);
+        String contentBase64 = pdcBefore.get(itemContentKey, DataType.STRING);
 
         if (contentBase64 == null || contentBase64.isEmpty()) {
             return;
@@ -297,7 +308,7 @@ public class BackpackPlugin extends JavaPlugin {
         ItemStack itemAfter = playerInventory.getItem(shiftSlot);
         ItemMeta metaAfter = itemAfter.getItemMeta();
         PersistentDataContainer pdcAfter = metaAfter.getPersistentDataContainer();
-        pdcAfter.set(itemContentKey, PersistentDataType.STRING, contentBase64);
+        pdcAfter.set(itemContentKey, DataType.STRING, contentBase64);
         itemAfter.setItemMeta(metaAfter);
         */
     }

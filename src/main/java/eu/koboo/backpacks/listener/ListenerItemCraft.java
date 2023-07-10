@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
@@ -35,6 +36,9 @@ public class ListenerItemCraft implements Listener {
         if (resultItem == null) {
             return;
         }
+        if (!(event.getView().getPlayer() instanceof Player player)) {
+            return;
+        }
         if (!plugin.isBackpack(resultItem)) {
             return;
         }
@@ -51,6 +55,7 @@ public class ListenerItemCraft implements Listener {
         NamespacedKey unstackableKey = plugin.getItemUnstackableKey();
         NamespacedKey sizeKey = plugin.getItemSizeKey();
         NamespacedKey contentKey = plugin.getItemContentKey();
+        NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
         // Check if the player wants to craft a coloured or a completely new backpack
         if (!keyed.getKey().toString().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
@@ -63,6 +68,9 @@ public class ListenerItemCraft implements Listener {
             // Get the default size and set it in the results pdc
             BackpackSize defaultSize = plugin.getBackpackConfig().getSize();
             resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
+
+            // Setting the owners id on the backpack
+            resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
 
             resultItem.setItemMeta(resultMeta);
             return;
@@ -93,22 +101,39 @@ public class ListenerItemCraft implements Listener {
         PersistentDataContainer matrixPDC = matrixMeta.getPersistentDataContainer();
 
         // Setting backpack content
+        copyValue(matrixPDC, resultPDC, contentKey, DataType.STRING);
+        /*
         String matrixContent = matrixPDC.get(contentKey, PersistentDataType.STRING);
         if (matrixContent != null) {
             resultPDC.set(contentKey, PersistentDataType.STRING, matrixContent);
         }
+        */
 
         // Setting backpack id
+        copyValue(matrixPDC, resultPDC, unstackableKey, DataType.UUID);
+        /*
         UUID matrixBackpackId = matrixPDC.get(unstackableKey, DataType.UUID);
         if (matrixBackpackId != null) {
             resultPDC.set(unstackableKey, DataType.UUID, matrixBackpackId);
         }
+         */
 
         // Setting the backpack size
+        copyValue(matrixPDC, resultPDC, sizeKey, DataType.STRING);
+        /*
         String sizeString = matrixPDC.get(sizeKey, DataType.STRING);
         if(sizeString != null) {
             resultPDC.set(sizeKey, DataType.STRING, sizeString);
         }
+         */
+
+        copyValue(matrixPDC, resultPDC, ownerKey, DataType.UUID);
+        /*
+        UUID ownerId = matrixPDC.get(ownerKey, DataType.UUID);
+        if(ownerId != null) {
+            resultPDC.set(ownerKey, DataType.UUID, ownerId);
+        }
+         */
 
         // Setting backpack name
         if (matrixMeta.hasDisplayName()) {
@@ -117,5 +142,16 @@ public class ListenerItemCraft implements Listener {
 
         // Resetting the item meta
         resultItem.setItemMeta(resultMeta);
+    }
+
+    private <T, Z> void copyValue(PersistentDataContainer from, PersistentDataContainer to,
+                                  NamespacedKey key,
+                                  PersistentDataType<Z, T> dataType) {
+        T valueType = from.get(key, dataType);
+        if (valueType != null) {
+            to.set(key, dataType, valueType);
+        } else {
+            to.remove(key);
+        }
     }
 }

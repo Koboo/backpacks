@@ -27,4 +27,18 @@ public class Restrictions {
             "can put a backpack in a backpack in a backpack and so on.."
     })
     boolean allowRecursion = false;
+
+    @YamlKey("only-owner-can-open")
+    @YamlCommandHead({
+            "Use this option to decide if only the owner",
+            "of the backpack can open it."
+    })
+    boolean onlyOwnerCanOpen = false;
+
+    @YamlKey("open-every-backpack-permission")
+    @YamlCommandHead({
+            "This permission is used to check if the player",
+            "can open the backpack, but only if the above option is set to true."
+    })
+    String openEveryBackpackPermission = "backpacks.open.every.backpack";
 }

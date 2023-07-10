@@ -1,6 +1,8 @@
 package eu.koboo.backpacks.listener;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
+import eu.koboo.backpacks.config.Restrictions;
 import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.ItemUtils;
 import lombok.AccessLevel;
@@ -114,6 +116,19 @@ public class ListenerOpenClose implements Listener {
         }
 
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+
+        // Check if the player is permitted to open the used backpack
+        Restrictions restrictions = plugin.getBackpackConfig().getRestrictions();
+        if(restrictions.isOnlyOwnerCanOpen()) {
+            UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
+            if(ownerId != null) {
+                if(!player.hasPermission(restrictions.getOpenEveryBackpackPermission())
+                        && !player.getUniqueId().equals(ownerId)) {
+                    //TODO: Add message
+                    return;
+                }
+            }
+        }
 
         // Getting the backpack size from config or item directly
         BackpackSize backpackSize = plugin.getBackpackConfig().getSize();
