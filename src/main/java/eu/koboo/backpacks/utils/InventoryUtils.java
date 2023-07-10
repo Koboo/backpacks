@@ -9,9 +9,9 @@ import org.bukkit.inventory.ItemStack;
 @UtilityClass
 public class InventoryUtils {
 
-    public boolean isBottomClick(int slot, Player player) {
+    public boolean isBottomClick(int rawSlot, Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
-        return top.getSize() <= slot;
+        return top.getSize() <= rawSlot;
     }
 
     public int findFreeSlot(Inventory inventory, boolean hotbar) {

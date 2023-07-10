@@ -43,9 +43,6 @@ public class ListenerCancelEquip implements Listener {
         if (!event.getView().getOriginalTitle().equalsIgnoreCase("Crafting")) {
             return;
         }
-        if(!InventoryUtils.isBottomClick(event.getRawSlot(), player)) {
-            return;
-        }
 
 
         ItemStack currentItem = event.getCurrentItem();
@@ -58,39 +55,34 @@ public class ListenerCancelEquip implements Listener {
         }
         InventoryType.SlotType slotType = event.getSlotType();
         int slot = event.getSlot();
+        boolean isBottomClick = InventoryUtils.isBottomClick(event.getRawSlot(), player);
 
         // Clicked in player inventory
         PlayerInventory playerInventory = player.getInventory();
-        if (event.isShiftClick()) {
-            if (!plugin.isBackpack(currentItem)) {
-                return;
-            }
-            if (slotType != InventoryType.SlotType.CONTAINER && slotType != InventoryType.SlotType.QUICKBAR) {
-                return;
-            }
+        // Shift equipping
+        if (event.isShiftClick()
+                && slotType != InventoryType.SlotType.CONTAINER
+                && slotType != InventoryType.SlotType.QUICKBAR
+                && isBottomClick
+                && plugin.isBackpack(currentItem)) {
+            // Custom shift handling for quality of life
             plugin.handleShift(player, slot, currentItem, slotType);
             event.setCancelled(true);
             return;
         }
-        if (event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT) {
-            if (slotType != InventoryType.SlotType.ARMOR) {
-                return;
-            }
-            if (!plugin.isBackpack(cursorItem)) {
-                return;
-            }
+        // Drag and Drop equipping
+        if ((event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT)
+                && slotType != InventoryType.SlotType.ARMOR
+                && !isBottomClick
+                && plugin.isBackpack(cursorItem)) {
             event.setCancelled(true);
             return;
         }
-        if (event.getClick() == ClickType.NUMBER_KEY) {
-            int hotBarButton = event.getHotbarButton();
-            ItemStack hotBarItem = playerInventory.getItem(hotBarButton);
-            if (hotBarItem == null) {
-                hotBarItem = new ItemStack(Material.AIR);
-            }
-            if (!plugin.isBackpack(hotBarItem)) {
-                return;
-            }
+        // Number key equipping
+        if (event.getClick() == ClickType.NUMBER_KEY
+                && slotType == InventoryType.SlotType.ARMOR
+                && isBottomClick
+                && plugin.isBackpack(playerInventory.getItem(event.getHotbarButton()))) {
             event.setCancelled(true);
         }
     }
