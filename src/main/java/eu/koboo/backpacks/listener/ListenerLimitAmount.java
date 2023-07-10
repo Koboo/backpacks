@@ -5,6 +5,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -68,6 +69,10 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         event.setCancelled(true);
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                        plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                                .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+        );
     }
 
     // Cancel pickup of backpacks if players exceeds limit
@@ -105,8 +110,8 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         // Check the total backpacks in the players inventory exceeds the set limit
-        int countedBackpacks = plugin.countBackpacks(player);
-        if (countedBackpacks <= maxAmount) {
+        int onCloseCount = plugin.countBackpacks(player);
+        if (onCloseCount <= maxAmount) {
             return;
         }
 
@@ -122,13 +127,25 @@ public class ListenerLimitAmount implements Listener {
         if(plugin.isBackpack(onCursor)) {
             player.getWorld().dropItem(player.getLocation(), onCursor);
             player.setItemOnCursor(new ItemStack(Material.AIR));
+            player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                    plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                            .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+            );
+            return;
+        }
+        int countAfterDroppedCursor = plugin.countBackpacks(player);
+        if(countAfterDroppedCursor <= maxAmount) {
             return;
         }
 
         // Check how many backpacks are too much and check every item from the top inventory
         // and drop them until we reached the max amount of the player inventory
-        int overflow = countedBackpacks - maxAmount;
-        for (ItemStack content : topInventory.getContents()) {
+        int overflow = countAfterDroppedCursor - maxAmount;
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+        );
+        for (ItemStack content : player.getInventory().getContents()) {
             if (content == null || !plugin.isBackpack(content)) {
                 continue;
             }
