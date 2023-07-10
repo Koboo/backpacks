@@ -41,4 +41,12 @@ public class Restrictions {
             "can open the backpack, but only if the above option is set to true."
     })
     String openEveryBackpackPermission = "backpacks.open.every.backpack";
+
+    @YamlKey("not-allowed-to-open-message")
+    @YamlCommandHead({
+            "This message gets send if the player is not permitted",
+            "to open used the backpack."
+    })
+    String notAllowedOpenMessage = "§cYou're not allowed to open that backpack.";
+
 }

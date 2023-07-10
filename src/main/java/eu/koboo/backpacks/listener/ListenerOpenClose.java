@@ -122,9 +122,10 @@ public class ListenerOpenClose implements Listener {
         if(restrictions.isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
             if(ownerId != null) {
-                if(!player.hasPermission(restrictions.getOpenEveryBackpackPermission())
+                if(!player.hasPermission(restrictions.getNotAllowedOpenMessage())
                         && !player.getUniqueId().equals(ownerId)) {
-                    //TODO: Add message
+                    player.sendMessage(LegacyComponentSerializer.legacySection()
+                            .deserialize(restrictions.getNotAllowedOpenMessage()));
                     return;
                 }
             }
