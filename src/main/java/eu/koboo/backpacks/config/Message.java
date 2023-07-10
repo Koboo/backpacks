@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.yaml.config.YamlCommandHead;
+import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class Message {
 
     @YamlKey("not-allowed-to-open-message")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "This message gets send if the player is not permitted",
             "to open used the backpack."
     })

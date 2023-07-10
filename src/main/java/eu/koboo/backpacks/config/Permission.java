@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.yaml.config.YamlCommandHead;
+import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class Permission {
 
     @YamlKey("open-every-backpack-permission")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "This permission is used to check if the player",
             "can open the backpack, but only if the above option is set to true."
     })

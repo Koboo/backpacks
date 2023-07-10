@@ -33,7 +33,7 @@ dependencies {
     compileOnly "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
     annotationProcessor "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
 
-    implementation 'eu.koboo:yaml-config:1.2.7'
+    implementation 'eu.koboo:yaml-config:1.2.9'
     implementation 'com.jeff_media:MorePersistentDataTypes:2.4.0'
 }
 
@@ -56,4 +56,9 @@ blossom {
     replaceToken('PROJECT_GROUP', projectGroup)
     replaceToken('PROJECT_DESCRIPTION', projectDescription)
     replaceToken('PROJECT_WEBSITE', projectWebsite)
+}
+
+shadowJar {
+    relocate 'com.jeff_media.morepersistentdatatypes', 'eu.koboo.backpacks.libs.morepersistentdatatypes'
+    relocate 'eu.koboo.yaml', 'eu.koboo.backpacks.libs.yaml'
 }

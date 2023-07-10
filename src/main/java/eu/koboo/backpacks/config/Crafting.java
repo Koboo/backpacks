@@ -1,7 +1,7 @@
 package eu.koboo.backpacks.config;
 
 import eu.koboo.backpacks.utils.BackpackSize;
-import eu.koboo.yaml.config.YamlCommandHead;
+import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,20 +18,20 @@ import java.util.List;
 public class Crafting {
 
     @YamlKey("allow-crafting")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Allow or disallow crafting of backpacks."
     })
     boolean allowCrafting = true;
 
     @YamlKey("discover-all-recipes")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "This option decides if the player should",
             "discover all backpack recipes after he joined the server."
     })
     boolean discoverAllRecipes = true;
 
     @YamlKey("default-backpack-size")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "This option sets the size of all backpacks.",
             "The value describes the amount of columns like chests.",
             "Values:",
@@ -40,7 +40,7 @@ public class Crafting {
     BackpackSize size = BackpackSize.THREE;
 
     @YamlKey("crafting-book-category")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Set the category of the crafting recipes.",
             "See this list:",
             "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/inventory/recipe/CraftingBookCategory.html"
@@ -48,14 +48,14 @@ public class Crafting {
     CraftingBookCategory category = CraftingBookCategory.EQUIPMENT;
 
     @YamlKey("recipe-pattern")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Sets the pattern for the backpack to be crafted.",
             "Define the letters here and the item list below"
     })
     List<String> craftingPattern = Arrays.asList("LLL", "SDS", "LLL");
 
     @YamlKey("recipe-items")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Sets the required item for the backpack recipe.",
             "Define the items here and the letters list below.",
             "See list of items/materials:",

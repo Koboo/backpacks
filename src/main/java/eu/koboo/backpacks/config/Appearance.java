@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.yaml.config.YamlCommandHead;
+import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class Appearance {
 
     @YamlKey("allow-backpack-coloring")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Enabling this option allows the player",
             "to craft different backpack colors by combining",
             "any dye with a backpack."
@@ -21,7 +21,7 @@ public class Appearance {
     boolean allowColoring = true;
 
     @YamlKey("default-backpack-name")
-    @YamlCommandHead({
+    @YamlCommentHead({
             "Change the default name of a backpack",
             "to allow your players more customization."
     })
