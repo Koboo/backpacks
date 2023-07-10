@@ -11,7 +11,7 @@ public class InventoryUtils {
 
     public boolean isBottomClick(int slot, Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
-        return top.getSize() + 1 <= slot;
+        return top.getSize() <= slot;
     }
 
     public int findFreeSlot(Inventory inventory, boolean hotbar) {
