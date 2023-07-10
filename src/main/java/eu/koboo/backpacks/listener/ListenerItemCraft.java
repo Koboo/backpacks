@@ -2,6 +2,7 @@ package eu.koboo.backpacks.listener;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
+import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.utils.BackpackSize;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -52,12 +53,13 @@ public class ListenerItemCraft implements Listener {
         }
         PersistentDataContainer resultPDC = resultMeta.getPersistentDataContainer();
 
+        Config backpackConfig = plugin.getBackpackConfig();
         NamespacedKey unstackableKey = plugin.getItemUnstackableKey();
         NamespacedKey sizeKey = plugin.getItemSizeKey();
         NamespacedKey contentKey = plugin.getItemContentKey();
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
-        // Check if the player wants to craft a coloured or a completely new backpack
+        // Check if the player wants to craft a colored or a completely new backpack
         if (!keyed.getKey().toString().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
 
@@ -66,7 +68,7 @@ public class ListenerItemCraft implements Listener {
             resultPDC.set(unstackableKey, DataType.UUID, resultBackpackId);
 
             // Get the default size and set it in the results pdc
-            BackpackSize defaultSize = plugin.getBackpackConfig().getCrafting().getSize();
+            BackpackSize defaultSize = backpackConfig.getCrafting().getSize();
             resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
 
             // Setting the owners id on the backpack
@@ -75,7 +77,7 @@ public class ListenerItemCraft implements Listener {
             resultItem.setItemMeta(resultMeta);
             return;
         }
-        // Crafting a coloured backpack
+        // Crafting a colored backpack
 
         // Check if the crafting table has a valid backpack player head
         ItemStack matrixItem = null;
@@ -96,7 +98,7 @@ public class ListenerItemCraft implements Listener {
             return;
         }
 
-        // Copy the properties of the coloured backpack to the new result
+        // Copy the properties of the colored backpack to the new result
         ItemMeta matrixMeta = matrixItem.getItemMeta();
         PersistentDataContainer matrixPDC = matrixMeta.getPersistentDataContainer();
 
