@@ -14,8 +14,20 @@ public class Permissions {
 
     @YamlKey("open-every-backpack-permission")
     @YamlCommentHead({
-            "This permission is used to check if the player",
-            "can open the backpack, but only if the above option is set to true."
+            "This permission is used to check if the player can open the backpack.",
+            "!! Only takes action, if only owners can open backpacks !!"
     })
-    String openEveryBackpackPermission = "backpacks.open.every.backpack";
+    String openEveryBackpack = "backpacks.open.every.backpack";
+
+    @YamlKey("craft-default-backpack")
+    @YamlCommentHead({
+            "This permission is used to check if the player can craft the default backpack."
+    })
+    String craftDefaultBackpack = "backpacks.craft.default";
+
+    @YamlKey("craft-colored-backpacks")
+    @YamlCommentHead({
+            "This permission is used to check if the player can craft the colored backpacks."
+    })
+    String craftColoredBackpack = "backpacks.craft.colored";
 }
