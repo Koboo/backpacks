@@ -4,7 +4,6 @@ import eu.koboo.backpacks.BackpackPlugin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -79,12 +78,12 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         if (event.getClick() == ClickType.NUMBER_KEY) {
-            int hotbarButton = event.getHotbarButton();
-            ItemStack hotbarItem = playerInventory.getItem(hotbarButton);
-            if (hotbarItem == null) {
-                hotbarItem = new ItemStack(Material.AIR);
+            int hotBarButton = event.getHotbarButton();
+            ItemStack hotBarItem = playerInventory.getItem(hotBarButton);
+            if (hotBarItem == null) {
+                hotBarItem = new ItemStack(Material.AIR);
             }
-            if (!plugin.isBackpack(hotbarItem)) {
+            if (!plugin.isBackpack(hotBarItem)) {
                 return;
             }
             event.setCancelled(true);
