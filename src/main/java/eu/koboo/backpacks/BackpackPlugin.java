@@ -60,7 +60,14 @@ public class BackpackPlugin extends JavaPlugin {
         - Disable backpacks in worlds by name
         - Close backpack if player gets damage
         - Shulker box handling
+            - shulker box in backpack
+            - backpack in shulker box
         - blacklisted items in backpacks
+        - Crafting backpacks permission
+        - Open backpack through inventory
+        - More display config:
+            - Show slots used
+            - Show raw material list
 
     */
 
@@ -205,7 +212,7 @@ public class BackpackPlugin extends JavaPlugin {
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
         pdc.set(itemIdentifierKey, DataType.BOOLEAN, true);
-        pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getSize().name());
+        pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getCrafting().getSize().name());
 
         headItem.setItemMeta(skullMeta);
         return headItem;

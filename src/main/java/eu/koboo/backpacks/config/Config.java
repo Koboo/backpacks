@@ -34,4 +34,16 @@ public class Config {
     })
     Crafting crafting = new Crafting();
 
+    @YamlEmbedded("messages")
+    @YamlCommandHead({
+            "Change the messages of the plugin."
+    })
+    Message message = new Message();
+
+    @YamlEmbedded("permissions")
+    @YamlCommandHead({
+            "Change the permissions of the plugin."
+    })
+    Permission permission = new Permission();
+
 }

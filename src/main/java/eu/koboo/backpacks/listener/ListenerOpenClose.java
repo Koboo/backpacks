@@ -2,6 +2,7 @@ package eu.koboo.backpacks.listener;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
+import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.config.Restrictions;
 import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.ItemUtils;
@@ -105,6 +106,8 @@ public class ListenerOpenClose implements Listener {
             return;
         }
 
+        Config backpackConfig = plugin.getBackpackConfig();
+
         // Getting the inventory name by item or config
         Component inventoryName = null;
         if (itemMeta.hasDisplayName()) {
@@ -112,27 +115,26 @@ public class ListenerOpenClose implements Listener {
         }
         if (inventoryName == null) {
             inventoryName = LegacyComponentSerializer.legacySection()
-                    .deserialize(plugin.getBackpackConfig().getAppearance().getDefaultBackpackName());
+                    .deserialize(backpackConfig.getAppearance().getDefaultBackpackName());
         }
 
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
         // Check if the player is permitted to open the used backpack
-        Restrictions restrictions = plugin.getBackpackConfig().getRestrictions();
-        if(restrictions.isOnlyOwnerCanOpen()) {
+        if(backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
             if(ownerId != null) {
-                if(!player.hasPermission(restrictions.getNotAllowedOpenMessage())
+                if(!player.hasPermission(backpackConfig.getPermission().getOpenEveryBackpackPermission())
                         && !player.getUniqueId().equals(ownerId)) {
                     player.sendMessage(LegacyComponentSerializer.legacySection()
-                            .deserialize(restrictions.getNotAllowedOpenMessage()));
+                            .deserialize(backpackConfig.getMessage().getNotAllowedOpenMessage()));
                     return;
                 }
             }
         }
 
         // Getting the backpack size from config or item directly
-        BackpackSize backpackSize = plugin.getBackpackConfig().getSize();
+        BackpackSize backpackSize = backpackConfig.getCrafting().getSize();
         String sizeString = pdc.get(plugin.getItemSizeKey(), PersistentDataType.STRING);
         if (sizeString != null) {
             backpackSize = BackpackSize.valueOf(sizeString.toUpperCase(Locale.ROOT));

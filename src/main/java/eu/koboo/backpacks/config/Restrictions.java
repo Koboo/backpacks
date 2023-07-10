@@ -23,8 +23,8 @@ public class Restrictions {
 
     @YamlKey("allow-backpack-in-backpack")
     @YamlCommandHead({
-            "Use this option to decide if a player",
-            "can put a backpack in a backpack in a backpack and so on.."
+            "Use this option to choose if a player",
+            "can put a backpacks in a backpack in a backpack and so on.."
     })
     boolean allowRecursion = false;
 
@@ -34,19 +34,5 @@ public class Restrictions {
             "of the backpack can open it."
     })
     boolean onlyOwnerCanOpen = false;
-
-    @YamlKey("open-every-backpack-permission")
-    @YamlCommandHead({
-            "This permission is used to check if the player",
-            "can open the backpack, but only if the above option is set to true."
-    })
-    String openEveryBackpackPermission = "backpacks.open.every.backpack";
-
-    @YamlKey("not-allowed-to-open-message")
-    @YamlCommandHead({
-            "This message gets send if the player is not permitted",
-            "to open used the backpack."
-    })
-    String notAllowedOpenMessage = "§cYou're not allowed to open that backpack.";
 
 }

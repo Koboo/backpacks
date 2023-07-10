@@ -66,7 +66,7 @@ public class ListenerItemCraft implements Listener {
             resultPDC.set(unstackableKey, DataType.UUID, resultBackpackId);
 
             // Get the default size and set it in the results pdc
-            BackpackSize defaultSize = plugin.getBackpackConfig().getSize();
+            BackpackSize defaultSize = plugin.getBackpackConfig().getCrafting().getSize();
             resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
 
             // Setting the owners id on the backpack
