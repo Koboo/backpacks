@@ -11,6 +11,7 @@ import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -27,10 +28,7 @@ import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 @Plugin(name = "PROJECT_NAME", version = "PROJECT_VERSION")
@@ -48,17 +46,19 @@ public class BackpackPlugin extends JavaPlugin {
     // If player has put a backpack into that inventories, he will collect another backpack,
     // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
     public static final List<InventoryType> INVENTORY_TYPES_ADDED_AFTER_CLOSE = Arrays.asList(
-            InventoryType.WORKBENCH, InventoryType.CRAFTING, InventoryType.ANVIL,
-            InventoryType.ENCHANTING, InventoryType.STONECUTTER
+            InventoryType.WORKBENCH, InventoryType.CRAFTING,
+            InventoryType.ANVIL, InventoryType.ENCHANTING,
+            InventoryType.STONECUTTER
     );
 
-    // The string key of the root recipe and the key prefix of the coloured recipes
+    // The string key of the root recipe and the key prefix of the colored recipes
     public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
     /* TODO:
         - Fix number key pressing cancelling
         - Disable backpacks in worlds by name
         - Close backpack if player gets damage
+        - Open cooldown
         - Shulker box handling
             - shulker box in backpack
             - backpack in shulker box
@@ -68,7 +68,6 @@ public class BackpackPlugin extends JavaPlugin {
         - More display config:
             - Show slots used
             - Show raw material list
-
     */
 
     ConfigurationLoader configurationLoader;
@@ -90,6 +89,9 @@ public class BackpackPlugin extends JavaPlugin {
     NamespacedKey rootBackpackRecipeKey;
     @Getter
     NamespacedKey openBackpackKey;
+
+    @Getter
+    List<Keyed> recipeKeyList;
 
     @Override
     public void onEnable() {
@@ -155,7 +157,12 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public void createRecipes() {
-        if(!backpackConfig.getCrafting().isAllowCrafting()) {
+        if(recipeKeyList != null) {
+            recipeKeyList.clear();
+        }
+        recipeKeyList = new ArrayList<>();
+
+        if(!backpackConfig.getCrafting().isCreateRecipes()) {
             return;
         }
         Bukkit.removeRecipe(rootBackpackRecipeKey);
@@ -182,6 +189,7 @@ public class BackpackPlugin extends JavaPlugin {
         }
         rootBackpackRecipe.setCategory(backpackConfig.getCrafting().getCategory());
         Bukkit.addRecipe(rootBackpackRecipe);
+        recipeKeyList.add(rootBackpackRecipe);
 
         boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
         for (BackpackColor color : BackpackColor.values()) {
@@ -194,6 +202,7 @@ public class BackpackPlugin extends JavaPlugin {
             colorRecipe.addIngredient(1, color.getMaterial());
             colorRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
             Bukkit.addRecipe(colorRecipe);
+            recipeKeyList.add(colorRecipe);
         }
     }
 
@@ -219,7 +228,10 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public boolean isBackpack(ItemStack itemStack) {
-        if (itemStack == null || itemStack.getType() != Material.PLAYER_HEAD || itemStack.getAmount() == 0) {
+        if (itemStack == null) {
+            return false;
+        }
+        if(itemStack.getType() != Material.PLAYER_HEAD) {
             return false;
         }
         ItemMeta itemMeta = itemStack.getItemMeta();
