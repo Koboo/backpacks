@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Messages {
 
-    @YamlKey("not-allowed-to-open-message")
+    @YamlKey("not-allowed-to-open")
     @YamlCommentHead({
             "Player is not permitted to open the used backpack."
     })
@@ -23,4 +23,16 @@ public class Messages {
             "Player exceeds the set limit of backpack amount in own inventory."
     })
     String exceedsLimitAmount = "§cYou're exceeding the maximum amount of %limit_amount% backpacks in your inventory.";
+
+    @YamlKey("not-allowed-to-craft-default")
+    @YamlCommentHead({
+            "Player is not permitted to craft the default backpack."
+    })
+    String notAllowedToCraftDefault = "§cYou're not allowed to craft the default backpack.";
+
+    @YamlKey("not-allowed-to-craft-colored")
+    @YamlCommentHead({
+            "Player is not permitted to craft the colored backpack."
+    })
+    String notAllowedToCraftColored = "§cYou're not allowed to craft the colored backpack.";
 }

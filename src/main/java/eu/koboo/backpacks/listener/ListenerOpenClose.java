@@ -17,7 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -171,7 +170,7 @@ public class ListenerOpenClose implements Listener {
                 if(!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
                     player.sendMessage(LegacyComponentSerializer.legacySection()
-                            .deserialize(backpackConfig.getMessages().getNotAllowedToOpen()));
+                            .deserialize(backpackConfig.getMessages().getNotAllowedToCraftColored()));
                     return;
                 }
             }
