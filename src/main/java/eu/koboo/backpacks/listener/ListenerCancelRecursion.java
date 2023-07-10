@@ -5,6 +5,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -45,6 +46,10 @@ public class ListenerCancelRecursion implements Listener {
         if (!(holder instanceof Player)) {
             return;
         }
+        if (!plugin.hasOpenBackback(player)) {
+            Bukkit.broadcastMessage("onClick: Has no open backpack");
+            return;
+        }
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) {
             currentItem = new ItemStack(Material.AIR);
@@ -53,28 +58,28 @@ public class ListenerCancelRecursion implements Listener {
         if (cursorItem == null) {
             cursorItem = new ItemStack(Material.AIR);
         }
-
         ClickType click = event.getClick();
         InventoryType.SlotType slotType = event.getSlotType();
         int slot = event.getSlot();
-        if (!plugin.hasOpenBackback(player)) {
-            return;
-        }
 
-        boolean clicksTop = !InventoryUtils.isBottomClick(event.getRawSlot(), player);
+        boolean isBottomClick = InventoryUtils.isBottomClick(event.getRawSlot(), player);
 
         ItemStack affectedItem = null;
         boolean handleShift = false;
-        if (!clicksTop && event.isShiftClick()) {
+
+        if (isBottomClick && event.isShiftClick()) {
             affectedItem = currentItem;
             handleShift = true;
         }
-        if (affectedItem == null && clicksTop && (click == ClickType.LEFT || click == ClickType.RIGHT)) {
+        if (affectedItem == null && !isBottomClick && (click == ClickType.LEFT || click == ClickType.RIGHT)) {
             affectedItem = cursorItem;
         }
-        if (affectedItem == null && clicksTop && click == ClickType.NUMBER_KEY) {
-            int hotbarButton = event.getHotbarButton();
-            affectedItem = player.getInventory().getItem(hotbarButton);
+        if (affectedItem == null && !isBottomClick && click == ClickType.NUMBER_KEY) {
+            int hotBarSlot = event.getHotbarButton();
+            affectedItem = player.getInventory().getItem(hotBarSlot);
+        }
+        if(affectedItem == null) {
+            return;
         }
         if (!plugin.isBackpack(affectedItem)) {
             return;
