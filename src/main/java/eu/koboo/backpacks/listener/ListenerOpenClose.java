@@ -3,7 +3,9 @@ package eu.koboo.backpacks.listener;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.config.Config;
-import eu.koboo.backpacks.config.Restrictions;
+import eu.koboo.backpacks.config.appearance.Appearance;
+import eu.koboo.backpacks.config.appearance.ConfigSound;
+import eu.koboo.backpacks.config.appearance.Sounds;
 import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.ItemUtils;
 import lombok.AccessLevel;
@@ -12,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -113,9 +116,10 @@ public class ListenerOpenClose implements Listener {
         if (itemMeta.hasDisplayName()) {
             inventoryName = itemMeta.displayName();
         }
+        Appearance appearance = backpackConfig.getAppearance();
         if (inventoryName == null) {
             inventoryName = LegacyComponentSerializer.legacySection()
-                    .deserialize(backpackConfig.getAppearance().getDefaultBackpackName());
+                    .deserialize(appearance.getDefaultBackpackName());
         }
 
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
@@ -124,10 +128,10 @@ public class ListenerOpenClose implements Listener {
         if(backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
             if(ownerId != null) {
-                if(!player.hasPermission(backpackConfig.getPermission().getOpenEveryBackpackPermission())
+                if(!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpackPermission())
                         && !player.getUniqueId().equals(ownerId)) {
                     player.sendMessage(LegacyComponentSerializer.legacySection()
-                            .deserialize(backpackConfig.getMessage().getNotAllowedOpenMessage()));
+                            .deserialize(backpackConfig.getMessages().getNotAllowedOpenMessage()));
                     return;
                 }
             }
@@ -159,6 +163,20 @@ public class ListenerOpenClose implements Listener {
 
         // Opening the inventory of the backpack
         player.openInventory(inventory);
+
+        Sounds sounds = appearance.getSounds();
+        if(sounds.isUseSounds()) {
+            ConfigSound openSound = sounds.getOpenSound();
+            if(sounds.isOnlyPlayerSounds()) {
+                player.playSound(
+                        player.getLocation(), openSound.getSound(), openSound.getVolume(), openSound.getPitch()
+                );
+            } else {
+                player.getWorld().playSound(
+                        player.getLocation(), openSound.getSound(), openSound.getVolume(), openSound.getPitch()
+                );
+            }
+        }
     }
 
     public void saveBackpack(Player player, Inventory inventory, UUID backpackId) {
@@ -189,5 +207,19 @@ public class ListenerOpenClose implements Listener {
 
         // Resetting the open backpack id
         plugin.setOpenBackpackId(player, null);
+
+        Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
+        if(sounds.isUseSounds()) {
+            ConfigSound closeSound = sounds.getCloseSound();
+            if(sounds.isOnlyPlayerSounds()) {
+                player.playSound(
+                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
+                );
+            } else {
+                player.getWorld().playSound(
+                        player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
+                );
+            }
+        }
     }
 }
