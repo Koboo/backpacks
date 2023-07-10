@@ -7,6 +7,7 @@ import eu.koboo.backpacks.utils.BackpackSize;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -60,8 +61,14 @@ public class ListenerItemCraft implements Listener {
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
         // Check if the player wants to craft a colored or a completely new backpack
-        if (!keyed.getKey().toString().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
+        if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
+            if(!player.hasPermission(backpackConfig.getPermissions().getCraftDefaultBackpack())) {
+                player.sendMessage(LegacyComponentSerializer.legacySection()
+                        .deserialize(backpackConfig.getMessages().getNotAllowedToCraftDefault()));
+                event.getInventory().setResult(new ItemStack(Material.AIR));
+                return;
+            }
 
             // Assign a new backpackId if the result doesn't have an id
             UUID resultBackpackId = UUID.randomUUID();
@@ -78,6 +85,12 @@ public class ListenerItemCraft implements Listener {
             return;
         }
         // Crafting a colored backpack
+        if(!player.hasPermission(backpackConfig.getPermissions().getCraftColoredBackpack())) {
+            player.sendMessage(LegacyComponentSerializer.legacySection()
+                    .deserialize(backpackConfig.getMessages().getNotAllowedToCraftColored()));
+            event.getInventory().setResult(new ItemStack(Material.AIR));
+            return;
+        }
 
         // Check if the crafting table has a valid backpack player head
         ItemStack matrixItem = null;
@@ -93,8 +106,7 @@ public class ListenerItemCraft implements Listener {
         }
         // if no valid backpack is found, clear the result
         if (matrixItem == null) {
-            resultItem.setType(Material.AIR);
-            resultItem.setAmount(0);
+            event.getInventory().setResult(new ItemStack(Material.AIR));
             return;
         }
 

@@ -1,22 +1,29 @@
 package eu.koboo.backpacks.listener;
 
+import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
+import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.BlockInventoryHolder;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -45,6 +52,10 @@ public class ListenerLimitAmount implements Listener {
         ItemStack cursorItem = event.getCursor();
         if (cursorItem == null) {
             cursorItem = new ItemStack(Material.AIR);
+        }
+        InventoryType topType = player.getOpenInventory().getTopInventory().getType();
+        if(topType == InventoryType.WORKBENCH || topType == InventoryType.CRAFTING) {
+            return;
         }
         ClickType click = event.getClick();
         boolean clicksTop = !InventoryUtils.isBottomClick(event.getRawSlot(), player);
@@ -128,7 +139,6 @@ public class ListenerLimitAmount implements Listener {
                     plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
                             .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
             );
-            return;
         }
         int countAfterDroppedCursor = plugin.countBackpacks(player);
         if (countAfterDroppedCursor <= maxAmount) {
@@ -138,10 +148,7 @@ public class ListenerLimitAmount implements Listener {
         // Check how many backpacks are too much and check every item from the top inventory
         // and drop them until we reached the max amount of the player inventory
         int overflow = countAfterDroppedCursor - maxAmount;
-        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
-                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
-        );
+        int dropped = 0;
         for (ItemStack content : player.getInventory().getContents()) {
             if (content == null || !plugin.isBackpack(content)) {
                 continue;
@@ -153,10 +160,17 @@ public class ListenerLimitAmount implements Listener {
             player.getWorld().dropItem(location, content);
             content.setAmount(0);
             content.setType(Material.AIR);
+            dropped += 1;
             if (overflow == 0) {
                 break;
             }
             overflow -= 1;
+        }
+        if(dropped > 0) {
+            player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                    plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                            .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+            );
         }
     }
 
@@ -195,5 +209,55 @@ public class ListenerLimitAmount implements Listener {
         event.setResult(Event.Result.DENY);
         event.setCursor(cursorItem);
         event.setCancelled(true);
+    }
+
+
+    // Make backpacks craft-able and unstackable
+    @EventHandler
+    public void onLimitAmountBackpackCraft(PrepareItemCraftEvent event) {
+        CraftingInventory inventory = event.getInventory();
+        ItemStack resultItem = inventory.getResult();
+        if (resultItem == null) {
+            return;
+        }
+        if (!(event.getView().getPlayer() instanceof Player player)) {
+            return;
+        }
+        if (!plugin.isBackpack(resultItem)) {
+            return;
+        }
+        Recipe recipe = event.getRecipe();
+        if (!(recipe instanceof Keyed keyed)) {
+            return;
+        }
+        ItemMeta resultMeta = resultItem.getItemMeta();
+        if (resultMeta == null) {
+            return;
+        }
+
+        // Check if limiting amount is enabled
+        int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
+        if (maxAmount <= -1) {
+            return;
+        }
+
+        int backpackCount = plugin.countBackpacks(player);
+        // The result is counted as backpack, so we need to subtract one from the total count
+        backpackCount -= 1;
+
+        // Check if the player wants to craft a colored backpack, in that case the result- and matrixItem is count as one
+        // and we need to subtract one more backpack from the count
+        boolean coloredCrafting = keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_");
+        if(coloredCrafting) {
+            backpackCount -= 1;
+        }
+        if (backpackCount < maxAmount) {
+            return;
+        }
+        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+        );
+        event.getInventory().setResult(new ItemStack(Material.AIR));
     }
 }
