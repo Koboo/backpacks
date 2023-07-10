@@ -47,7 +47,6 @@ public class ListenerCancelRecursion implements Listener {
             return;
         }
         if (!plugin.hasOpenBackback(player)) {
-            Bukkit.broadcastMessage("onClick: Has no open backpack");
             return;
         }
         ItemStack currentItem = event.getCurrentItem();
