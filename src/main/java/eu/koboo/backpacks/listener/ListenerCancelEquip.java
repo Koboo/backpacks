@@ -1,6 +1,7 @@
 package eu.koboo.backpacks.listener;
 
 import eu.koboo.backpacks.BackpackPlugin;
+import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,6 +40,14 @@ public class ListenerCancelEquip implements Listener {
         if (!(holder instanceof Player)) {
             return;
         }
+        if (!event.getView().getOriginalTitle().equalsIgnoreCase("Crafting")) {
+            return;
+        }
+        if(!InventoryUtils.isBottomClick(event.getRawSlot(), player)) {
+            return;
+        }
+
+
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) {
             currentItem = new ItemStack(Material.AIR);
@@ -49,10 +58,6 @@ public class ListenerCancelEquip implements Listener {
         }
         InventoryType.SlotType slotType = event.getSlotType();
         int slot = event.getSlot();
-
-        if (!event.getView().getOriginalTitle().equalsIgnoreCase("Crafting")) {
-            return;
-        }
 
         // Clicked in player inventory
         PlayerInventory playerInventory = player.getInventory();
