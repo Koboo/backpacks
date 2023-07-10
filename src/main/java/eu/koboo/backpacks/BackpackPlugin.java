@@ -57,7 +57,6 @@ public class BackpackPlugin extends JavaPlugin {
 
     /* TODO:
         - Fix number key pressing cancelling
-        - Create option for only owner opening
         - Disable backpacks in worlds by name
         - Close backpack if player gets damage
         - Shulker box handling
