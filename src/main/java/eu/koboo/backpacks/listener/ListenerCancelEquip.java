@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -24,7 +26,7 @@ public class ListenerCancelEquip implements Listener {
     BackpackPlugin plugin;
 
     @EventHandler
-    public void onEquipBackpack(InventoryClickEvent event) {
+    public void onEquipBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -40,10 +42,9 @@ public class ListenerCancelEquip implements Listener {
         if (!(holder instanceof Player)) {
             return;
         }
-        if (!event.getView().getOriginalTitle().equalsIgnoreCase("Crafting")) {
+        if(inventory.getType() != InventoryType.CRAFTING) {
             return;
         }
-
 
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) {
@@ -85,5 +86,33 @@ public class ListenerCancelEquip implements Listener {
                 && plugin.isBackpack(playerInventory.getItem(event.getHotbarButton()))) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onEquipBackpackDrag(InventoryDragEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        ItemStack cursorItem = event.getOldCursor();
+        if (!plugin.isBackpack(cursorItem)) {
+            return;
+        }
+        Inventory inventory = event.getInventory();
+        if (inventory.getType() != InventoryType.CRAFTING) {
+            return;
+        }
+        InventoryHolder holder = inventory.getHolder();
+        if(!(holder instanceof Player)) {
+            return;
+        }
+        if(!event.getRawSlots().contains(BackpackPlugin.HELMET_RAW_SLOT)) {
+            return;
+        }
+        event.setResult(Event.Result.DENY);
+        event.setCursor(cursorItem);
+        event.setCancelled(true);
     }
 }

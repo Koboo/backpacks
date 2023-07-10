@@ -6,17 +6,14 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.BlockInventoryHolder;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +26,7 @@ public class ListenerLimitAmount implements Listener {
     BackpackPlugin plugin;
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
+    public void onLimitAmountBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -70,14 +67,14 @@ public class ListenerLimitAmount implements Listener {
         }
         event.setCancelled(true);
         player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
-                        plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                                .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
         );
     }
 
     // Cancel pickup of backpacks if players exceeds limit
     @EventHandler
-    public void onPickup(EntityPickupItemEvent event) {
+    public void onLimitAmountBackpackPickup(EntityPickupItemEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -100,7 +97,7 @@ public class ListenerLimitAmount implements Listener {
     }
 
     @EventHandler
-    public void onClose(InventoryCloseEvent event) {
+    public void onLimitAmountBackpackClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) {
             return;
         }
@@ -118,13 +115,13 @@ public class ListenerLimitAmount implements Listener {
         // Check if the items from the inventory gets added to the players inventory after closing
         Inventory topInventory = player.getOpenInventory().getTopInventory();
         InventoryType inventoryType = topInventory.getType();
-        if(!BackpackPlugin.INVENTORY_TYPES_ADDED_AFTER_CLOSE.contains(inventoryType)) {
+        if (!BackpackPlugin.INVENTORY_TYPES_ADDED_AFTER_CLOSE.contains(inventoryType)) {
             return;
         }
 
         // Check if the player has the backpack still on its cursor and if so drop it
         ItemStack onCursor = player.getItemOnCursor();
-        if(plugin.isBackpack(onCursor)) {
+        if (plugin.isBackpack(onCursor)) {
             player.getWorld().dropItem(player.getLocation(), onCursor);
             player.setItemOnCursor(new ItemStack(Material.AIR));
             player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
@@ -134,7 +131,7 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         int countAfterDroppedCursor = plugin.countBackpacks(player);
-        if(countAfterDroppedCursor <= maxAmount) {
+        if (countAfterDroppedCursor <= maxAmount) {
             return;
         }
 
@@ -161,5 +158,42 @@ public class ListenerLimitAmount implements Listener {
             }
             overflow -= 1;
         }
+    }
+
+
+    @EventHandler
+    public void onLimitAmountBackpackDrag(InventoryDragEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        ItemStack cursorItem = event.getOldCursor();
+        if (!plugin.isBackpack(cursorItem)) {
+            return;
+        }
+        if (!InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
+            return;
+        }
+        Inventory top = player.getOpenInventory().getTopInventory();
+        if (top.getType() != InventoryType.CRAFTING) {
+            return;
+        }
+        Inventory bottom = player.getOpenInventory().getBottomInventory();
+        if (bottom.getType() != InventoryType.PLAYER) {
+            return;
+        }
+        int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
+        if (maxAmount <= -1) {
+            return;
+        }
+        int backpackCount = plugin.countBackpacks(player);
+        if (backpackCount < maxAmount) {
+            return;
+        }
+        event.setResult(Event.Result.DENY);
+        event.setCursor(cursorItem);
+        event.setCancelled(true);
     }
 }
