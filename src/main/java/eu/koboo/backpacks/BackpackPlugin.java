@@ -214,12 +214,12 @@ public class BackpackPlugin extends JavaPlugin {
             rootBackpackRecipe.setIngredient(charKey.charAt(0), material);
         }
         rootBackpackRecipe.setCategory(backpackConfig.getCrafting().getCategory());
-        Bukkit.addRecipe(rootBackpackRecipe);
+        Bukkit.getServer().addRecipe(rootBackpackRecipe);
         recipeKeyList.add(rootBackpackRecipe);
 
         boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
         for (BackpackColor color : BackpackColor.values()) {
-            Bukkit.removeRecipe(color.getRecipeKey());
+            Bukkit.getServer().removeRecipe(color.getRecipeKey());
             if (!allowDifferentColors) {
                 continue;
             }
@@ -227,7 +227,7 @@ public class BackpackPlugin extends JavaPlugin {
             colorRecipe.addIngredient(1, Material.PLAYER_HEAD);
             colorRecipe.addIngredient(1, color.getMaterial());
             colorRecipe.setCategory(CraftingBookCategory.EQUIPMENT);
-            Bukkit.addRecipe(colorRecipe);
+            Bukkit.getServer().addRecipe(colorRecipe);
             recipeKeyList.add(colorRecipe);
         }
     }
