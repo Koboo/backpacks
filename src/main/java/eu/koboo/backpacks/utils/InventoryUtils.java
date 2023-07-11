@@ -3,25 +3,37 @@ package eu.koboo.backpacks.utils;
 import lombok.experimental.UtilityClass;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @UtilityClass
 public class InventoryUtils {
 
-    public boolean isBottomClick(int rawSlot, Player player) {
+    public static final List<Integer> PLAYER_INVENTORY_TOP_SLOTS = Arrays.asList(
+            0, 1, 2, 3, 4, 5, 6, 7, 8
+    );
+
+    public int getTopSize(Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
-        return top.getSize() <= rawSlot;
+        if(top.getType() == InventoryType.CRAFTING) {
+            return 9;
+        }
+        return top.getSize();
+    }
+    public boolean isBottomClick(int rawSlot, Player player) {
+        return getTopSize(player) <= rawSlot;
     }
 
     public boolean isBottomDrag(Set<Integer> rawSlotSet, Player player) {
-        InventoryView view = player.getOpenInventory();
-        Inventory top = view.getTopInventory();
+        int topSize = getTopSize(player);
         for (Integer rawSlot : rawSlotSet) {
-            if(rawSlot < top.getSize()) {
+            if(rawSlot < topSize) {
                 continue;
             }
             return true;
