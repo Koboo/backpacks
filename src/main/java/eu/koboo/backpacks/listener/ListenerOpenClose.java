@@ -212,21 +212,19 @@ public class ListenerOpenClose implements Listener {
             String worldName = player.getWorld().getName();
             if (disabledWorldNames.contains(worldName)
                     && !player.hasPermission(backpackConfig.getPermissions().getIgnoreWorldRestriction())) {
-                player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
-                        backpackConfig.getMessages().getNotAllowedToOpenInWorld()
+                player.sendMessage(backpackConfig.getMessages().getNotAllowedToOpenInWorld()
                                 .replaceAll("%world_name%", worldName)
-                ));
+                );
             }
         }
         // Getting the inventory name by item or config
-        Component inventoryName = null;
+        String inventoryName = null;
         if (itemMeta.hasDisplayName()) {
-            inventoryName = itemMeta.displayName();
+            inventoryName = itemMeta.getDisplayName();
         }
         Appearance appearance = backpackConfig.getAppearance();
         if (inventoryName == null) {
-            inventoryName = LegacyComponentSerializer.legacySection()
-                    .deserialize(appearance.getDefaultBackpackName());
+            inventoryName = appearance.getDefaultBackpackName();
         }
 
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
@@ -237,8 +235,7 @@ public class ListenerOpenClose implements Listener {
             if (ownerId != null) {
                 if (!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
-                    player.sendMessage(LegacyComponentSerializer.legacySection()
-                            .deserialize(backpackConfig.getMessages().getNotAllowedToCraftColored()));
+                    player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftColored());
                     return;
                 }
             }

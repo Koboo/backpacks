@@ -1,15 +1,13 @@
 package eu.koboo.backpacks;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
+import eu.koboo.backpacks.textures.TextureApplier;
 import eu.koboo.backpacks.utils.BackpackColor;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -81,6 +79,8 @@ public class BackpackPlugin extends JavaPlugin {
     @Getter
     Config backpackConfig;
 
+    TextureApplier textureApplier;
+
     @Getter
     NamespacedKey itemIdentifierKey;
     @Getter
@@ -114,9 +114,6 @@ public class BackpackPlugin extends JavaPlugin {
         }
 
         plugin = this;
-        getDataFolder().mkdirs();
-
-        configurationLoader = new ConfigurationLoader();
 
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
@@ -126,7 +123,12 @@ public class BackpackPlugin extends JavaPlugin {
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
+        getDataFolder().mkdirs();
+        configurationLoader = new ConfigurationLoader();
+
         reloadConfig();
+
+        textureApplier = TextureApplier.createApplier();
 
         Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerBackpackInShulkerBox(this), this);
@@ -224,17 +226,18 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public ItemStack createBackpack(BackpackColor color) {
-        ItemStack headItem = new ItemStack(Material.PLAYER_HEAD);
 
+        if(color == null) {
+            color = BackpackColor.NONE;
+        }
+
+        ItemStack headItem = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) headItem.getItemMeta();
 
-        PlayerProfile playerProfile = Bukkit.createProfile(UUID.randomUUID());
-        playerProfile.getProperties().add(new ProfileProperty("textures", color.getValue()));
-
-        skullMeta.setPlayerProfile(playerProfile);
+        textureApplier.applyTexture(color, skullMeta);
 
         String backpackName = backpackConfig.getAppearance().getDefaultBackpackName();
-        skullMeta.displayName(LegacyComponentSerializer.legacySection().deserialize(backpackName));
+        skullMeta.setDisplayName(backpackName);
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
         pdc.set(itemIdentifierKey, DataType.BOOLEAN, true);

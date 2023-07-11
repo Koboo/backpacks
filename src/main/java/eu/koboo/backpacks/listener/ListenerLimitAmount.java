@@ -5,7 +5,6 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
@@ -73,9 +72,9 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         event.setCancelled(true);
-        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+        player.sendMessage(
                 plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+                        .replaceAll("%limit_amount%", String.valueOf(maxAmount))
         );
     }
 
@@ -127,9 +126,9 @@ public class ListenerLimitAmount implements Listener {
         if (plugin.isBackpack(onCursor)) {
             player.getWorld().dropItem(player.getLocation(), onCursor);
             player.setItemOnCursor(new ItemStack(Material.AIR));
-            player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+            player.sendMessage(
                     plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                            .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+                            .replaceAll("%limit_amount%", String.valueOf(maxAmount))
             );
         }
         int countAfterDroppedCursor = plugin.countBackpacks(player);
@@ -162,9 +161,9 @@ public class ListenerLimitAmount implements Listener {
             overflow -= 1;
         }
         if(dropped > 0) {
-            player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+            player.sendMessage(
                     plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                            .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+                            .replaceAll("%limit_amount%", String.valueOf(maxAmount))
             );
         }
     }
@@ -245,9 +244,9 @@ public class ListenerLimitAmount implements Listener {
         if (backpackCount < maxAmount) {
             return;
         }
-        player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+        player.sendMessage(
                 plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
-                        .replaceAll("%limit_amount%", String.valueOf(maxAmount)))
+                        .replaceAll("%limit_amount%", String.valueOf(maxAmount))
         );
         event.getInventory().setResult(new ItemStack(Material.AIR));
     }

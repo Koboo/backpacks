@@ -3,11 +3,9 @@ package eu.koboo.backpacks.listener;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.config.Config;
-import eu.koboo.backpacks.utils.BackpackSize;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -68,8 +66,7 @@ public class ListenerItemCraft implements Listener {
         if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
             if(!player.hasPermission(backpackConfig.getPermissions().getCraftDefaultBackpack())) {
-                player.sendMessage(LegacyComponentSerializer.legacySection()
-                        .deserialize(backpackConfig.getMessages().getNotAllowedToCraftDefault()));
+                player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftDefault());
                 event.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
             }
@@ -92,8 +89,7 @@ public class ListenerItemCraft implements Listener {
         }
         // Crafting a colored backpack
         if(!player.hasPermission(backpackConfig.getPermissions().getCraftColoredBackpack())) {
-            player.sendMessage(LegacyComponentSerializer.legacySection()
-                    .deserialize(backpackConfig.getMessages().getNotAllowedToCraftColored()));
+            player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftColored());
             event.getInventory().setResult(new ItemStack(Material.AIR));
             return;
         }
@@ -133,7 +129,7 @@ public class ListenerItemCraft implements Listener {
 
         // Setting backpack name
         if (matrixMeta.hasDisplayName()) {
-            resultMeta.displayName(matrixMeta.displayName());
+            resultMeta.setDisplayName(matrixMeta.getDisplayName());
         }
 
         // Resetting the item meta

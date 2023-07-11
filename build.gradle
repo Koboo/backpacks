@@ -10,10 +10,10 @@ version = "$projectVersion"
 repositories {
     mavenCentral()
     maven {
-        url 'https://repo.papermc.io/repository/maven-public/'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     maven {
-        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        url 'https://papermc.io/repo/repository/maven-public/'
     }
     maven {
         url 'https://reposilite.koboo.eu/releases'
@@ -25,13 +25,15 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT'
-    compileOnly 'com.mojang:authlib:3.11.50'
+    compileOnly 'org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT'
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     compileOnly "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
     annotationProcessor "org.spigotmc:plugin-annotations:$pluginAnnotationsVersion"
+
+    implementation 'io.papermc:paperlib:1.0.7'
 
     implementation 'eu.koboo:yaml-config:1.2.9'
     implementation 'com.jeff_media:MorePersistentDataTypes:2.4.0'
@@ -62,4 +64,5 @@ blossom {
 shadowJar {
     relocate 'com.jeff_media.morepersistentdatatypes', 'eu.koboo.backpacks.libs.morepersistentdatatypes'
     relocate 'eu.koboo.yaml', 'eu.koboo.backpacks.libs.yaml'
+    relocate 'io.papermc.lib', 'eu.koboo.backpacks.libs.paper'
 }
