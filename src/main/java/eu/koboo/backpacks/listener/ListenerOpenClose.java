@@ -14,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -31,9 +32,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -150,6 +149,17 @@ public class ListenerOpenClose implements Listener {
 
         Config backpackConfig = plugin.getBackpackConfig();
 
+        List<String> disabledWorldNames = backpackConfig.getRestrictions().getDisabledWorldNames();
+        if(disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
+            String worldName = player.getWorld().getName();
+            if(disabledWorldNames.contains(worldName)
+                    && !player.hasPermission(backpackConfig.getPermissions().getIgnoreWorldRestriction())) {
+                player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
+                        backpackConfig.getMessages().getNotAllowedToOpenInWorld()
+                                .replaceAll("%world_name%", worldName)
+                ));
+            }
+        }
         // Getting the inventory name by item or config
         Component inventoryName = null;
         if (itemMeta.hasDisplayName()) {

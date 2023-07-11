@@ -30,4 +30,10 @@ public class Permissions {
             "This permission is used to check if the player can craft the colored backpacks."
     })
     String craftColoredBackpack = "backpacks.craft.colored";
+
+    @YamlKey("ignore-world-restriction")
+    @YamlCommentHead({
+            "This permission is used to check if the player can ignore the disabled worlds when opening backpacks."
+    })
+    String ignoreWorldRestriction = "backpacks.ignore.world.restriction";
 }

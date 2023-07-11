@@ -35,4 +35,10 @@ public class Messages {
             "Player is not permitted to craft the colored backpack."
     })
     String notAllowedToCraftColored = "§cYou're not allowed to craft the colored backpack.";
+
+    @YamlKey("not-allowed-in-world")
+    @YamlCommentHead({
+            "Player is not permitted to open backpack in current world."
+    })
+    String notAllowedToOpenInWorld = "§cYou're not allowed to open the backpack in world %world_name%.";
 }

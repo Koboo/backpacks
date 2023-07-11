@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -34,5 +37,13 @@ public class Restrictions {
             "of the backpack can open it."
     })
     boolean onlyOwnerCanOpen = false;
+
+    @YamlKey("disabled-in-worlds")
+    @YamlCommentHead({
+            "Use this option to disable opening of backpacks",
+            "in certain worlds."
+    })
+    List<String> disabledWorldNames = new ArrayList<>();
+
 
 }
