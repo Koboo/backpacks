@@ -32,10 +32,6 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         Inventory inventory = event.getInventory();
-        InventoryType type = inventory.getType();
-        if (type != InventoryType.CRAFTING) {
-            return;
-        }
         InventoryHolder holder = inventory.getHolder();
         if (!(holder instanceof Player)) {
             return;
@@ -58,7 +54,6 @@ public class ListenerCancelEquip implements Listener {
 
         // Clicked in player inventory
         PlayerInventory playerInventory = player.getInventory();
-        Bukkit.broadcastMessage(slotType.name());
         // Shift equipping
         if (event.isShiftClick()
                 && (slotType == InventoryType.SlotType.CONTAINER || slotType == InventoryType.SlotType.QUICKBAR)
