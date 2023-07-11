@@ -41,7 +41,12 @@ public class Restrictions {
     @YamlKey("disabled-in-worlds")
     @YamlCommentHead({
             "Use this option to disable opening of backpacks",
-            "in certain worlds."
+            "in certain worlds.",
+            "Examples:",
+            "disabled-in-worlds: | ",
+            "  - world",
+            "  - world_nether",
+            "  - world_the_end",
     })
     List<String> disabledWorldNames = new ArrayList<>();
 
