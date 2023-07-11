@@ -106,9 +106,6 @@ public class BackpackPlugin extends JavaPlugin {
 
         configurationLoader = new ConfigurationLoader();
 
-        File configFile = createConfigFile();
-        loadConfigFile(configFile);
-
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
         itemContentKey = NamespacedKey.fromString("backpack_content", this);
@@ -117,7 +114,7 @@ public class BackpackPlugin extends JavaPlugin {
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
-        createRecipes();
+        reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
@@ -135,11 +132,17 @@ public class BackpackPlugin extends JavaPlugin {
         super.onDisable();
     }
 
-    public File createConfigFile() {
+    public void reloadConfig() {
+        File configFile = createConfigFile();
+        loadConfigFile(configFile);
+        createRecipes();
+    }
+
+    private File createConfigFile() {
         return new File(getDataFolder(), "config.yml");
     }
 
-    public void loadConfigFile(File configFile) {
+    private void loadConfigFile(File configFile) {
         try {
             if (!configFile.exists()) {
                 configurationLoader.saveToFile(new Config(), configFile);
@@ -154,7 +157,7 @@ public class BackpackPlugin extends JavaPlugin {
         }
     }
 
-    public void createRecipes() {
+    private void createRecipes() {
         if (recipeKeyList != null) {
             recipeKeyList.clear();
         }
