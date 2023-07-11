@@ -5,6 +5,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -57,6 +58,7 @@ public class ListenerCancelEquip implements Listener {
 
         // Clicked in player inventory
         PlayerInventory playerInventory = player.getInventory();
+        Bukkit.broadcastMessage(slotType.name());
         // Shift equipping
         if (event.isShiftClick()
                 && (slotType == InventoryType.SlotType.CONTAINER || slotType == InventoryType.SlotType.QUICKBAR)
@@ -70,7 +72,6 @@ public class ListenerCancelEquip implements Listener {
         // Drag and Drop equipping
         if ((event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT)
                 && slotType == InventoryType.SlotType.ARMOR
-                && !isBottomClick
                 && plugin.isBackpack(cursorItem)) {
             event.setCancelled(true);
             return;
@@ -78,7 +79,6 @@ public class ListenerCancelEquip implements Listener {
         // Number key equipping
         if (event.getClick() == ClickType.NUMBER_KEY
                 && slotType == InventoryType.SlotType.ARMOR
-                && isBottomClick
                 && plugin.isBackpack(playerInventory.getItem(event.getHotbarButton()))) {
             event.setCancelled(true);
         }
@@ -92,12 +92,8 @@ public class ListenerCancelEquip implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        ItemStack cursorItem = event.getOldCursor();
-        if (!plugin.isBackpack(cursorItem)) {
-            return;
-        }
         Inventory inventory = event.getInventory();
-        if (inventory.getType() == InventoryType.CRAFTING) {
+        if (inventory.getType() != InventoryType.CRAFTING) {
             return;
         }
         InventoryHolder holder = inventory.getHolder();
@@ -105,6 +101,10 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         if(!event.getRawSlots().contains(BackpackPlugin.HELMET_RAW_SLOT)) {
+            return;
+        }
+        ItemStack cursorItem = event.getOldCursor();
+        if (!plugin.isBackpack(cursorItem)) {
             return;
         }
         event.setResult(Event.Result.DENY);

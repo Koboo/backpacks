@@ -54,8 +54,10 @@ public class BackpackPlugin extends JavaPlugin {
     // The string key of the root recipe and the key prefix of the colored recipes
     public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
+    // The raw slot of the helmet equipment slot in the player inventory
+    public static final int HELMET_RAW_SLOT = 5;
+
     /* TODO:
-        - Fix number key pressing cancelling
         - Disable backpacks in worlds by name
         - Close backpack if player gets damage
         - Open cooldown
@@ -121,7 +123,6 @@ public class BackpackPlugin extends JavaPlugin {
 
         createRecipes();
 
-        Bukkit.getPluginManager().registerEvents(new ListenerCancelDrag(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelRecursion(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerDiscoverRecipes(this), this);
@@ -157,21 +158,21 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public void createRecipes() {
-        if(recipeKeyList != null) {
+        if (recipeKeyList != null) {
             recipeKeyList.clear();
         }
         recipeKeyList = new ArrayList<>();
 
-        if(!backpackConfig.getCrafting().isCreateRecipes()) {
+        if (!backpackConfig.getCrafting().isCreateRecipes()) {
             return;
         }
         Bukkit.removeRecipe(rootBackpackRecipeKey);
 
         List<String> craftingPattern = backpackConfig.getCrafting().getCraftingPattern();
-        if(craftingPattern.isEmpty()) {
+        if (craftingPattern.isEmpty()) {
             throw new RuntimeException("Couldn't create crafting recipe, no recipe pattern provided");
         }
-        if(craftingPattern.size() > 3) {
+        if (craftingPattern.size() > 3) {
             throw new RuntimeException("Couldn't create crafting recipe, recipe pattern has more than 3 lines");
         }
 
@@ -194,7 +195,7 @@ public class BackpackPlugin extends JavaPlugin {
         boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
         for (BackpackColor color : BackpackColor.values()) {
             Bukkit.removeRecipe(color.getRecipeKey());
-            if(!allowDifferentColors) {
+            if (!allowDifferentColors) {
                 continue;
             }
             ShapelessRecipe colorRecipe = new ShapelessRecipe(color.getRecipeKey(), createBackpack(color));
@@ -231,7 +232,7 @@ public class BackpackPlugin extends JavaPlugin {
         if (itemStack == null) {
             return false;
         }
-        if(itemStack.getType() != Material.PLAYER_HEAD) {
+        if (itemStack.getType() != Material.PLAYER_HEAD) {
             return false;
         }
         ItemMeta itemMeta = itemStack.getItemMeta();
@@ -340,10 +341,14 @@ public class BackpackPlugin extends JavaPlugin {
             int topCount = countBackpacks(topInventory);
             count += topCount;
         }
+        ItemStack onCursor = player.getItemOnCursor();
+        if(plugin.isBackpack(onCursor)) {
+            count += 1;
+        }
         return count;
     }
 
-    private int countBackpacks(Inventory inventory) {
+    public int countBackpacks(Inventory inventory) {
         int count = 0;
         for (ItemStack content : inventory.getContents()) {
             if (content == null || content.getType() == Material.AIR) {

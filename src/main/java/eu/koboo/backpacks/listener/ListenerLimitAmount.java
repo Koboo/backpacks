@@ -1,9 +1,6 @@
 package eu.koboo.backpacks.listener;
 
-import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
-import eu.koboo.backpacks.config.Config;
-import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +9,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -21,9 +17,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-
-import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -45,6 +38,10 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
 
+        InventoryType topType = player.getOpenInventory().getTopInventory().getType();
+        if(topType == InventoryType.WORKBENCH) {
+            return;
+        }
         ItemStack currentItem = event.getCurrentItem();
         if (currentItem == null) {
             currentItem = new ItemStack(Material.AIR);
@@ -53,26 +50,21 @@ public class ListenerLimitAmount implements Listener {
         if (cursorItem == null) {
             cursorItem = new ItemStack(Material.AIR);
         }
-        InventoryType topType = player.getOpenInventory().getTopInventory().getType();
-        if(topType == InventoryType.WORKBENCH || topType == InventoryType.CRAFTING) {
-            return;
-        }
         ClickType click = event.getClick();
-        boolean clicksTop = !InventoryUtils.isBottomClick(event.getRawSlot(), player);
+        boolean isBottomClick = InventoryUtils.isBottomClick(event.getRawSlot(), player);
 
         ItemStack affectedItem = null;
-        if (clicksTop && (event.isShiftClick() || click == ClickType.NUMBER_KEY)) {
+        if (!isBottomClick && (event.isShiftClick() || click == ClickType.NUMBER_KEY)) {
             affectedItem = currentItem;
         }
-        if (affectedItem == null && !clicksTop && (click == ClickType.LEFT || click == ClickType.RIGHT)) {
+        if (affectedItem == null && isBottomClick && (click == ClickType.LEFT || click == ClickType.RIGHT)) {
             affectedItem = cursorItem;
         }
-
-        if (!plugin.isBackpack(affectedItem)) {
+        if(!plugin.isBackpack(affectedItem)) {
             return;
         }
-        int totalBackpacks = plugin.countBackpacks(player);
-        // MaxAmount - 1
+
+        int totalBackpacks = plugin.countBackpacks(player.getOpenInventory().getBottomInventory());
         if (totalBackpacks <= (maxAmount - 1)) {
             return;
         }
@@ -123,13 +115,6 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
 
-        // Check if the items from the inventory gets added to the players inventory after closing
-        Inventory topInventory = player.getOpenInventory().getTopInventory();
-        InventoryType inventoryType = topInventory.getType();
-        if (!BackpackPlugin.INVENTORY_TYPES_ADDED_AFTER_CLOSE.contains(inventoryType)) {
-            return;
-        }
-
         // Check if the player has the backpack still on its cursor and if so drop it
         ItemStack onCursor = player.getItemOnCursor();
         if (plugin.isBackpack(onCursor)) {
@@ -144,6 +129,9 @@ public class ListenerLimitAmount implements Listener {
         if (countAfterDroppedCursor <= maxAmount) {
             return;
         }
+
+        // Check if the items from the inventory gets added to the players inventory after closing
+        Inventory topInventory = player.getOpenInventory().getTopInventory();
 
         // Check how many backpacks are too much and check every item from the top inventory
         // and drop them until we reached the max amount of the player inventory
@@ -188,10 +176,6 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         if (!InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
-            return;
-        }
-        Inventory top = player.getOpenInventory().getTopInventory();
-        if (top.getType() != InventoryType.CRAFTING) {
             return;
         }
         Inventory bottom = player.getOpenInventory().getBottomInventory();
