@@ -31,6 +31,13 @@ public class Restrictions {
     })
     boolean allowRecursion = false;
 
+    @YamlKey("allow-shulker-box-in-backpack")
+    @YamlCommentHead({
+            "Use this option to choose if a player",
+            "can put a shulker boxes in a backpack."
+    })
+    boolean allowShulkerBoxIn = false;
+
     @YamlKey("only-owner-can-open")
     @YamlCommentHead({
             "Use this option to decide if only the owner",

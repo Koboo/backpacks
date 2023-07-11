@@ -10,10 +10,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.Keyed;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
@@ -46,8 +43,10 @@ public class BackpackPlugin extends JavaPlugin {
     // If player has put a backpack into that inventories, he will collect another backpack,
     // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
     public static final List<InventoryType> INVENTORY_TYPES_ADDED_AFTER_CLOSE = Arrays.asList(
-            InventoryType.WORKBENCH, InventoryType.CRAFTING,
-            InventoryType.ANVIL, InventoryType.ENCHANTING,
+            InventoryType.WORKBENCH,
+            InventoryType.CRAFTING,
+            InventoryType.ANVIL,
+            InventoryType.ENCHANTING,
             InventoryType.STONECUTTER
     );
 
@@ -123,6 +122,7 @@ public class BackpackPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ListenerItemCraft(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerLimitAmount(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerOpenClose(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerShulkerBoxInBackpack(this), this);
 
         super.onEnable();
     }
