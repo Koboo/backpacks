@@ -143,7 +143,7 @@ public class ListenerOpenClose implements Listener {
         if (inventory.getType() != InventoryType.CHEST) {
             return;
         }
-        UUID backpackId = plugin.getOpenBackpackId(player);
+        UUID backpackId = getOpenBackpackId(player);
         if (backpackId == null) {
             return;
         }
@@ -173,7 +173,7 @@ public class ListenerOpenClose implements Listener {
         backpackItem.setItemMeta(itemMeta);
 
         // Resetting the open backpack id
-        plugin.setOpenBackpackId(player, null);
+        setOpenBackpackId(player, null);
 
         Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
         if (sounds.isUseSounds()) {
@@ -262,7 +262,7 @@ public class ListenerOpenClose implements Listener {
 
         // Setting the open backpack id into the players pdc
         UUID backpackId = plugin.getBackpackIdByItem(backpackItem);
-        plugin.setOpenBackpackId(player, backpackId);
+        setOpenBackpackId(player, backpackId);
 
         // Opening the inventory of the backpack
         player.openInventory(inventory);
@@ -280,5 +280,22 @@ public class ListenerOpenClose implements Listener {
                 );
             }
         }
+    }
+
+    public UUID getOpenBackpackId(Player player) {
+        // Getting the open backpack id from the players pdc
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        return pdc.get(plugin.getOpenBackpackKey(), DataType.UUID);
+    }
+
+    public void setOpenBackpackId(Player player, UUID uuid) {
+        // Saving the open backpack id into the players pdc
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        if (uuid != null) {
+            pdc.set(plugin.getOpenBackpackKey(), DataType.UUID, uuid);
+            return;
+        }
+        // if uuid is null, we just remove it from the pdc
+        pdc.remove(plugin.getOpenBackpackKey());
     }
 }

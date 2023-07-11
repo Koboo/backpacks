@@ -5,7 +5,6 @@ import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
 import eu.koboo.backpacks.textures.TextureApplier;
 import eu.koboo.backpacks.utils.BackpackColor;
-import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
@@ -202,7 +201,7 @@ public class BackpackPlugin extends JavaPlugin {
             throw new RuntimeException("Couldn't create crafting recipe, recipe pattern has more than 3 lines");
         }
 
-        ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.BROWN));
+        ShapedRecipe rootBackpackRecipe = new ShapedRecipe(rootBackpackRecipeKey, createBackpack(BackpackColor.NONE));
         rootBackpackRecipe.shape(
                 craftingPattern.get(0),
                 craftingPattern.get(1),
@@ -234,10 +233,6 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public ItemStack createBackpack(BackpackColor color) {
-
-        if (color == null) {
-            color = BackpackColor.NONE;
-        }
 
         ItemStack headItem = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta skullMeta = (SkullMeta) headItem.getItemMeta();
@@ -280,9 +275,17 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public ItemStack findBackpackById(Player player, UUID backpackId) {
+        InventoryView view = player.getOpenInventory();
+        ItemStack backpackItem = findBackpackInInventoryById(view.getTopInventory(), backpackId);
+        if(backpackItem == null) {
+            return findBackpackInInventoryById(view.getBottomInventory(), backpackId);
+        }
+        return null;
+    }
+
+    public ItemStack findBackpackInInventoryById(Inventory inventory, UUID backpackId) {
         ItemStack backpackItem = null;
-        Inventory bottomInventory = player.getOpenInventory().getBottomInventory();
-        for (ItemStack content : bottomInventory.getContents()) {
+        for (ItemStack content : inventory.getContents()) {
             if (content == null || content.getType() != Material.PLAYER_HEAD) {
                 continue;
             }
@@ -296,29 +299,13 @@ public class BackpackPlugin extends JavaPlugin {
         return backpackItem;
     }
 
-    public UUID getOpenBackpackId(Player player) {
-        // Getting the open backpack id from the players pdc
-        PersistentDataContainer pdc = player.getPersistentDataContainer();
-        return pdc.getOrDefault(openBackpackKey, DataType.UUID, null);
-    }
-
-    public void setOpenBackpackId(Player player, UUID uuid) {
-        // Saving the open backpack id into the players pdc
-        PersistentDataContainer pdc = player.getPersistentDataContainer();
-        if (uuid != null) {
-            pdc.set(openBackpackKey, DataType.UUID, uuid);
-            return;
-        }
-        // if uuid is null, we just remove it from the pdc
-        pdc.remove(openBackpackKey);
-    }
-
     public boolean hasOpenBackback(Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
         if (top.getType() != InventoryType.CHEST) {
             return false;
         }
-        UUID backpackId = getOpenBackpackId(player);
+        PersistentDataContainer pdc = player.getPersistentDataContainer();
+        UUID backpackId = pdc.get(openBackpackKey, DataType.UUID);
         if (backpackId == null) {
             return false;
         }
