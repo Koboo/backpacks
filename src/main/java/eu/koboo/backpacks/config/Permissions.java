@@ -12,12 +12,12 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Permissions {
 
-    @YamlKey("open-every-backpack-permission")
+    @YamlKey("ignore-owner-restriction")
     @YamlCommentHead({
             "This permission is used to check if the player can open the backpack.",
             "!! Only takes action, if only owners can open backpacks !!"
     })
-    String openEveryBackpack = "backpacks.open.every.backpack";
+    String openEveryBackpack = "backpacks.ignore.owner.restriction";
 
     @YamlKey("craft-default-backpack")
     @YamlCommentHead({
@@ -33,7 +33,8 @@ public class Permissions {
 
     @YamlKey("ignore-world-restriction")
     @YamlCommentHead({
-            "This permission is used to check if the player can ignore the disabled worlds when opening backpacks."
+            "This permission is used to check if the player can ignore the disabled worlds when opening backpacks.",
+            "!! Only takes action, if player is in disabled world !!"
     })
     String ignoreWorldRestriction = "backpacks.ignore.world.restriction";
 }

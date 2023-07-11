@@ -58,9 +58,6 @@ public class BackpackPlugin extends JavaPlugin {
 
     /* TODO:
         - Open cooldown
-        - Shulker box handling
-            - shulker box in backpack
-            - backpack in shulker box
         - blacklisted items in backpacks
         - Fix equipping in creative
         - More display config:
