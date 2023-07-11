@@ -117,6 +117,7 @@ public class BackpackPlugin extends JavaPlugin {
         reloadConfig();
 
         Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerBackpackInShulkerBox(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelRecursion(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerDiscoverRecipes(this), this);

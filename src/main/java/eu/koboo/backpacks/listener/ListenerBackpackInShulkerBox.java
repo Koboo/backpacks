@@ -23,12 +23,12 @@ import org.bukkit.inventory.ItemStack;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class ListenerShulkerBoxInBackpack implements Listener {
+public class ListenerBackpackInShulkerBox implements Listener {
 
     BackpackPlugin plugin;
 
     @EventHandler
-    public void onShulkerBoxInBackpackClick(InventoryClickEvent event) {
+    public void onBackpackInShulkerBoxClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -38,20 +38,13 @@ public class ListenerShulkerBoxInBackpack implements Listener {
         if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        if (plugin.getBackpackConfig().getRestrictions().isAllowShulkerInBackpack()) {
+        if (plugin.getBackpackConfig().getRestrictions().isAllowBackpackInShulker()) {
             return;
         }
         Inventory inventory = event.getInventory();
         InventoryType type = inventory.getType();
 
-        if (type != InventoryType.CHEST) {
-            return;
-        }
-        InventoryHolder holder = inventory.getHolder();
-        if (!(holder instanceof Player)) {
-            return;
-        }
-        if (!plugin.hasOpenBackback(player)) {
+        if (type != InventoryType.SHULKER_BOX) {
             return;
         }
         ItemStack currentItem = event.getCurrentItem();
@@ -85,7 +78,7 @@ public class ListenerShulkerBoxInBackpack implements Listener {
         if (affectedItem == null) {
             return;
         }
-        if(!Tag.SHULKER_BOXES.isTagged(affectedItem.getType())) {
+        if(!plugin.isBackpack(affectedItem)) {
             return;
         }
         event.setCancelled(true);
@@ -95,7 +88,7 @@ public class ListenerShulkerBoxInBackpack implements Listener {
     }
 
     @EventHandler
-    public void onShulkerBoxInBackpackDrag(InventoryDragEvent event) {
+    public void onBackpackInShulkerBoxDrag(InventoryDragEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -108,11 +101,12 @@ public class ListenerShulkerBoxInBackpack implements Listener {
         if (plugin.getBackpackConfig().getRestrictions().isAllowShulkerInBackpack()) {
             return;
         }
-        if (!plugin.hasOpenBackback(player)) {
+        Inventory inventory = event.getInventory();
+        if(inventory.getType() != InventoryType.SHULKER_BOX) {
             return;
         }
         ItemStack cursorItem = event.getOldCursor();
-        if(!Tag.SHULKER_BOXES.isTagged(cursorItem.getType())) {
+        if(!plugin.isBackpack(cursorItem)) {
             return;
         }
         if(InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {

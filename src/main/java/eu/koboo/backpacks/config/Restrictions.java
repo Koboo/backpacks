@@ -36,7 +36,14 @@ public class Restrictions {
             "Use this option to choose if a player",
             "can put a shulker boxes in a backpack."
     })
-    boolean allowShulkerBoxIn = false;
+    boolean allowShulkerInBackpack = false;
+
+    @YamlKey("allow-backpack-in-shulker-box")
+    @YamlCommentHead({
+            "Use this option to choose if a player",
+            "can put a backpack in a shulker box."
+    })
+    boolean allowBackpackInShulker = false;
 
     @YamlKey("only-owner-can-open")
     @YamlCommentHead({
