@@ -90,7 +90,7 @@ public class ListenerShulkerBoxInBackpack implements Listener {
         }
         event.setCancelled(true);
         if (handleShift) {
-            plugin.handleShift(player, slot, currentItem, slotType);
+            InventoryUtils.handleCancelledArmorShiftClick(player, slot, currentItem, slotType);
         }
     }
 

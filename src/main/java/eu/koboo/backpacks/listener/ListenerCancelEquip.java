@@ -66,7 +66,7 @@ public class ListenerCancelEquip implements Listener {
                 && isBottomClick
                 && plugin.isBackpack(currentItem)) {
             // Custom shift handling for quality of life
-            plugin.handleShift(player, slot, currentItem, slotType);
+            InventoryUtils.handleCancelledArmorShiftClick(player, slot, currentItem, slotType);
             event.setCancelled(true);
             return;
         }

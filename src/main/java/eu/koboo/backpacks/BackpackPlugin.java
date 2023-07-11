@@ -329,20 +329,6 @@ public class BackpackPlugin extends JavaPlugin {
         return true;
     }
 
-    public void handleShift(Player player, int slot, ItemStack currentItem, InventoryType.SlotType slotType) {
-
-        PlayerInventory playerInventory = player.getInventory();
-        boolean freeHotbar = slotType == InventoryType.SlotType.CONTAINER;
-        int shiftSlot = InventoryUtils.findFreeSlot(playerInventory, freeHotbar);
-
-        if (shiftSlot == -1) {
-            return;
-        }
-
-        playerInventory.setItem(shiftSlot, currentItem);
-        playerInventory.setItem(slot, new ItemStack(Material.AIR));
-    }
-
     public int countBackpacks(Player player) {
         int count = 0;
         InventoryView view = player.getOpenInventory();

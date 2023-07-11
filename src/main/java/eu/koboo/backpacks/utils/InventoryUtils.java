@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,9 +16,19 @@ import java.util.Set;
 @UtilityClass
 public class InventoryUtils {
 
-    public static final List<Integer> PLAYER_INVENTORY_TOP_SLOTS = Arrays.asList(
-            0, 1, 2, 3, 4, 5, 6, 7, 8
-    );
+    public void handleCancelledArmorShiftClick(Player player, int slot, ItemStack currentItem, InventoryType.SlotType slotType) {
+
+        PlayerInventory playerInventory = player.getInventory();
+        boolean freeHotbar = slotType == InventoryType.SlotType.CONTAINER;
+        int shiftSlot = InventoryUtils.findFreeSlot(playerInventory, freeHotbar);
+
+        if (shiftSlot == -1) {
+            return;
+        }
+
+        playerInventory.setItem(shiftSlot, currentItem);
+        playerInventory.setItem(slot, new ItemStack(Material.AIR));
+    }
 
     public int getTopSize(Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
