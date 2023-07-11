@@ -7,6 +7,7 @@ import eu.koboo.backpacks.config.appearance.Appearance;
 import eu.koboo.backpacks.config.appearance.ConfigSound;
 import eu.koboo.backpacks.config.appearance.Sounds;
 import eu.koboo.backpacks.utils.BackpackSize;
+import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.backpacks.utils.ItemUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -14,25 +15,26 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -42,7 +44,7 @@ public class ListenerOpenClose implements Listener {
 
     // Handle backpack open event
     @EventHandler
-    public void onInteractBackpack(PlayerInteractEvent event) {
+    public void onOpenCloseInteractBackpack(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR) {
             return;
         }
@@ -66,7 +68,7 @@ public class ListenerOpenClose implements Listener {
 
     // Handle backpack place (right-click on block)
     @EventHandler
-    public void onPlaceBackpack(BlockPlaceEvent event) {
+    public void onOpenClosePlaceBackpack(BlockPlaceEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -78,14 +80,57 @@ public class ListenerOpenClose implements Listener {
         openBackpack(event.getPlayer(), itemInHand);
     }
 
+    @EventHandler
+    public void onOpenCloseClickBackpack(InventoryClickEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(!plugin.getBackpackConfig().getHandling().isOpenThroughInventory()) {
+            return;
+        }
+        Inventory inventory = event.getClickedInventory();
+        if (inventory == null) {
+            return;
+        }
+        InventoryHolder holder = inventory.getHolder();
+        if (!(holder instanceof Player)) {
+            return;
+        }
+        if (inventory.getType() != InventoryType.PLAYER) {
+            return;
+        }
+        if (event.getSlotType() != InventoryType.SlotType.CONTAINER
+                && event.getSlotType() != InventoryType.SlotType.QUICKBAR) {
+            return;
+        }
+        boolean isBottomClick = InventoryUtils.isBottomClick(event.getRawSlot(), player);
+        if(!isBottomClick) {
+            return;
+        }
+        if(event.getClick() != ClickType.DOUBLE_CLICK) {
+            return;
+        }
+        ItemStack cursorItem = event.getCursor();
+        if(!plugin.isBackpack(cursorItem)) {
+            return;
+        }
+        event.setCancelled(true);
+
+        player.closeInventory();
+        openBackpack(player, cursorItem);
+    }
+
     // Handle backpack close event
     @EventHandler
-    public void onCloseBackpack(InventoryCloseEvent event) {
+    public void onOpenCloseBackpack(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) {
             return;
         }
-        InventoryType type = event.getInventory().getType();
-        if (type != InventoryType.CHEST) {
+        Inventory inventory = event.getInventory();
+        if (inventory.getType() != InventoryType.CHEST) {
             return;
         }
         UUID backpackId = plugin.getOpenBackpackId(player);
@@ -99,7 +144,7 @@ public class ListenerOpenClose implements Listener {
             return;
         }
 
-        String contentBase64 = ItemUtils.toBase64(event.getInventory());
+        String contentBase64 = ItemUtils.toBase64(inventory);
 
         ItemMeta itemMeta = backpackItem.getItemMeta();
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
@@ -121,9 +166,9 @@ public class ListenerOpenClose implements Listener {
         plugin.setOpenBackpackId(player, null);
 
         Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
-        if(sounds.isUseSounds()) {
+        if (sounds.isUseSounds()) {
             ConfigSound closeSound = sounds.getCloseSound();
-            if(sounds.isOnlyPlayerSounds()) {
+            if (sounds.isOnlyPlayerSounds()) {
                 player.playSound(
                         player.getLocation(), closeSound.getSound(), closeSound.getVolume(), closeSound.getPitch()
                 );
@@ -137,7 +182,7 @@ public class ListenerOpenClose implements Listener {
     }
 
     private void openBackpack(Player player, ItemStack backpackItem) {
-        if(backpackItem == null) {
+        if (backpackItem == null) {
             return;
         }
 
@@ -150,9 +195,9 @@ public class ListenerOpenClose implements Listener {
         Config backpackConfig = plugin.getBackpackConfig();
 
         List<String> disabledWorldNames = backpackConfig.getRestrictions().getDisabledWorldNames();
-        if(disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
+        if (disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
             String worldName = player.getWorld().getName();
-            if(disabledWorldNames.contains(worldName)
+            if (disabledWorldNames.contains(worldName)
                     && !player.hasPermission(backpackConfig.getPermissions().getIgnoreWorldRestriction())) {
                 player.sendMessage(LegacyComponentSerializer.legacySection().deserialize(
                         backpackConfig.getMessages().getNotAllowedToOpenInWorld()
@@ -174,10 +219,10 @@ public class ListenerOpenClose implements Listener {
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
         // Check if the player is permitted to open the used backpack
-        if(backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
+        if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
-            if(ownerId != null) {
-                if(!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
+            if (ownerId != null) {
+                if (!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
                     player.sendMessage(LegacyComponentSerializer.legacySection()
                             .deserialize(backpackConfig.getMessages().getNotAllowedToCraftColored()));
@@ -214,9 +259,9 @@ public class ListenerOpenClose implements Listener {
         player.openInventory(inventory);
 
         Sounds sounds = appearance.getSounds();
-        if(sounds.isUseSounds()) {
+        if (sounds.isUseSounds()) {
             ConfigSound openSound = sounds.getOpenSound();
-            if(sounds.isOnlyPlayerSounds()) {
+            if (sounds.isOnlyPlayerSounds()) {
                 player.playSound(
                         player.getLocation(), openSound.getSound(), openSound.getVolume(), openSound.getPitch()
                 );
