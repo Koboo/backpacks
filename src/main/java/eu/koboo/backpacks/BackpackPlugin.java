@@ -277,7 +277,7 @@ public class BackpackPlugin extends JavaPlugin {
     public ItemStack findBackpackById(Player player, UUID backpackId) {
         InventoryView view = player.getOpenInventory();
         ItemStack backpackItem = findBackpackInInventoryById(view.getTopInventory(), backpackId);
-        if(backpackItem == null) {
+        if (backpackItem == null) {
             return findBackpackInInventoryById(view.getBottomInventory(), backpackId);
         }
         return null;

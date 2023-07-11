@@ -9,8 +9,6 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 @UtilityClass
