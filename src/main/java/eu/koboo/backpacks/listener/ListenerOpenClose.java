@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -120,6 +121,7 @@ public class ListenerOpenClose implements Listener {
         event.setCancelled(true);
 
         player.closeInventory();
+        player.setItemOnCursor(new ItemStack(Material.AIR));
         openBackpack(player, cursorItem);
     }
 
