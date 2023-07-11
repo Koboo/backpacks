@@ -60,7 +60,7 @@ public class ListenerItemCraft implements Listener {
 
         Config backpackConfig = plugin.getBackpackConfig();
         NamespacedKey unstackableKey = plugin.getItemUnstackableKey();
-        NamespacedKey sizeKey = plugin.getItemSizeKey();
+        //NamespacedKey sizeKey = plugin.getItemSizeKey();
         NamespacedKey contentKey = plugin.getItemContentKey();
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
@@ -79,8 +79,10 @@ public class ListenerItemCraft implements Listener {
             resultPDC.set(unstackableKey, DataType.UUID, resultBackpackId);
 
             // Get the default size and set it in the results pdc
+            /*
             BackpackSize defaultSize = backpackConfig.getCrafting().getSize();
             resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
+            */
 
             // Setting the owners id on the backpack
             resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
@@ -120,38 +122,14 @@ public class ListenerItemCraft implements Listener {
 
         // Setting backpack content
         copyValue(matrixPDC, resultPDC, contentKey, DataType.STRING);
-        /*
-        String matrixContent = matrixPDC.get(contentKey, PersistentDataType.STRING);
-        if (matrixContent != null) {
-            resultPDC.set(contentKey, PersistentDataType.STRING, matrixContent);
-        }
-        */
 
         // Setting backpack id
         copyValue(matrixPDC, resultPDC, unstackableKey, DataType.UUID);
-        /*
-        UUID matrixBackpackId = matrixPDC.get(unstackableKey, DataType.UUID);
-        if (matrixBackpackId != null) {
-            resultPDC.set(unstackableKey, DataType.UUID, matrixBackpackId);
-        }
-         */
 
         // Setting the backpack size
-        copyValue(matrixPDC, resultPDC, sizeKey, DataType.STRING);
-        /*
-        String sizeString = matrixPDC.get(sizeKey, DataType.STRING);
-        if(sizeString != null) {
-            resultPDC.set(sizeKey, DataType.STRING, sizeString);
-        }
-         */
+        //copyValue(matrixPDC, resultPDC, sizeKey, DataType.STRING);
 
         copyValue(matrixPDC, resultPDC, ownerKey, DataType.UUID);
-        /*
-        UUID ownerId = matrixPDC.get(ownerKey, DataType.UUID);
-        if(ownerId != null) {
-            resultPDC.set(ownerKey, DataType.UUID, ownerId);
-        }
-         */
 
         // Setting backpack name
         if (matrixMeta.hasDisplayName()) {

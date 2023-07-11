@@ -84,8 +84,10 @@ public class BackpackPlugin extends JavaPlugin {
     NamespacedKey itemUnstackableKey;
     @Getter
     NamespacedKey itemContentKey;
+    /*
     @Getter
     NamespacedKey itemSizeKey;
+    */
     @Getter
     NamespacedKey itemOwnerKey;
     @Getter
@@ -116,7 +118,7 @@ public class BackpackPlugin extends JavaPlugin {
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
         itemContentKey = NamespacedKey.fromString("backpack_content", this);
-        itemSizeKey = NamespacedKey.fromString("backpack_size", this);
+        //itemSizeKey = NamespacedKey.fromString("backpack_size", this);
         itemOwnerKey = NamespacedKey.fromString("backpack_owner", this);
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
@@ -233,7 +235,7 @@ public class BackpackPlugin extends JavaPlugin {
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
         pdc.set(itemIdentifierKey, DataType.BOOLEAN, true);
-        pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getCrafting().getSize().name());
+        //pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getCrafting().getSize().name());
 
         headItem.setItemMeta(skullMeta);
         return headItem;
