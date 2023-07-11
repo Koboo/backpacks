@@ -1,6 +1,8 @@
 package eu.koboo.backpacks.config.appearance;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Sound;
 

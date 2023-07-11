@@ -1,7 +1,6 @@
 package eu.koboo.backpacks.config;
 
 import eu.koboo.backpacks.config.appearance.Appearance;
-import eu.koboo.yaml.config.YamlCommentHead;
 import eu.koboo.yaml.config.YamlEmbedded;
 import lombok.AccessLevel;
 import lombok.Getter;
