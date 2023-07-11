@@ -166,9 +166,10 @@ public class BackpackPlugin extends JavaPlugin {
         try {
             if (!configFile.exists()) {
                 configurationLoader.saveToFile(new Config(), configFile);
-                getLogger().log(Level.INFO, "Exported default configuration!");
+                getLogger().log(Level.INFO, "Successful exported default configuration file..");
             }
             backpackConfig = configurationLoader.loadFromFile(Config.class, configFile);
+            getLogger().log(Level.INFO, "Successful loaded configuration file!");
 
             configurationLoader.saveToFile(backpackConfig, configFile);
         } catch (IOException e) {
