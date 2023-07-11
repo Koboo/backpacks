@@ -8,7 +8,9 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Getter
@@ -104,6 +106,18 @@ public enum BackpackColor {
             "https://textures.minecraft.net/texture/2308bf5cc3e9decaf0770c3fdad1e042121cf39cc2505bbb866e18c6d23ccd0c",
             Material.BROWN_DYE
     );
+
+    private static final Map<Material, BackpackColor> COLOR_BY_MATERIAL_MAP = new HashMap<>();
+
+    static {
+        for (BackpackColor color : values()) {
+            COLOR_BY_MATERIAL_MAP.put(color.getMaterial(), color);
+        }
+    }
+
+    public static BackpackColor getColorByMaterial(Material material) {
+        return COLOR_BY_MATERIAL_MAP.get(material);
+    }
 
     String base64;
     String url;
