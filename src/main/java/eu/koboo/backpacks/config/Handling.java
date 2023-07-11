@@ -15,7 +15,9 @@ public class Handling {
     @YamlKey("open-backpack-through-inventory")
     @YamlCommentHead({
             "Set this to true, so players can open backpacks through ",
-            "double-click on the item in any inventory."
+            "double-click on the item in their own inventory.",
+            "It doesn't work if they click them e.g. in chests, hoppers, barrels, etc.",
+            "They have to use it in their own inventory."
     })
     boolean openThroughInventory = false;
 
