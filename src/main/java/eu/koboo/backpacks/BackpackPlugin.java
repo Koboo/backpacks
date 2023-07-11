@@ -65,6 +65,8 @@ public class BackpackPlugin extends JavaPlugin {
         - blacklisted items in backpacks
         - Fix equipping in creative
         - Create different slot types
+        - Permissions per color
+        - Permissions for commands
         - Auto insert in chests, barrels, enderchests, trapped chest, shulker boxes
         - Backpack command
             - Reload
