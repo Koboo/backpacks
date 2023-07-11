@@ -58,13 +58,11 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
-        - Close backpack if player gets damage
         - Open cooldown
         - Shulker box handling
             - shulker box in backpack
             - backpack in shulker box
         - blacklisted items in backpacks
-        - Open backpack through inventory
         - More display config:
             - Show slots used
             - Show raw material list
