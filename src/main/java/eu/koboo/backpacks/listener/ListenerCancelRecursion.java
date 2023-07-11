@@ -94,6 +94,9 @@ public class ListenerCancelRecursion implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
+        if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {
+            return;
+        }
         ItemStack cursorItem = event.getOldCursor();
         if (!plugin.isBackpack(cursorItem)) {
             return;
