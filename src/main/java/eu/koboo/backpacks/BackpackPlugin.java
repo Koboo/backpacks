@@ -10,6 +10,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.yaml.config.ConfigurationLoader;
 import lombok.Getter;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -39,6 +40,8 @@ public class BackpackPlugin extends JavaPlugin {
 
     @Getter
     private static BackpackPlugin plugin;
+
+    public static final int BSTATS_ID = 19062;
 
     // If player has put a backpack into that inventories, he will collect another backpack,
     // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
@@ -88,6 +91,8 @@ public class BackpackPlugin extends JavaPlugin {
     @Getter
     List<Keyed> recipeKeyList;
 
+    Metrics metrics;
+
     @Override
     public void onEnable() {
         try {
@@ -122,6 +127,8 @@ public class BackpackPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ListenerLimitAmount(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerOpenClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerShulkerBoxInBackpack(this), this);
+
+        metrics = new Metrics(this, BSTATS_ID);
 
         super.onEnable();
     }
