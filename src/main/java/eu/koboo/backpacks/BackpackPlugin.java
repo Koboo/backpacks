@@ -58,14 +58,12 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
-        - Disable backpacks in worlds by name
         - Close backpack if player gets damage
         - Open cooldown
         - Shulker box handling
             - shulker box in backpack
             - backpack in shulker box
         - blacklisted items in backpacks
-        - Crafting backpacks permission
         - Open backpack through inventory
         - More display config:
             - Show slots used
@@ -123,6 +121,7 @@ public class BackpackPlugin extends JavaPlugin {
 
         createRecipes();
 
+        Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelRecursion(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerDiscoverRecipes(this), this);
