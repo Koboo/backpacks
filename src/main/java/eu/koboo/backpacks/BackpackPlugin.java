@@ -63,6 +63,11 @@ public class BackpackPlugin extends JavaPlugin {
         - Open cooldown
         - blacklisted items in backpacks
         - Fix equipping in creative
+        - Create different slot types
+        - Backpack command
+            - Reload
+            - Give
+            - Recipe
         - More display config:
             - Show slots used
             - Show raw material list
@@ -320,22 +325,6 @@ public class BackpackPlugin extends JavaPlugin {
 
         playerInventory.setItem(shiftSlot, currentItem);
         playerInventory.setItem(slot, new ItemStack(Material.AIR));
-
-        /*
-        ItemMeta metaBefore = currentItem.getItemMeta();
-        PersistentDataContainer pdcBefore = metaBefore.getPersistentDataContainer();
-        String contentBase64 = pdcBefore.get(itemContentKey, DataType.STRING);
-
-        if (contentBase64 == null || contentBase64.isEmpty()) {
-            return;
-        }
-
-        ItemStack itemAfter = playerInventory.getItem(shiftSlot);
-        ItemMeta metaAfter = itemAfter.getItemMeta();
-        PersistentDataContainer pdcAfter = metaAfter.getPersistentDataContainer();
-        pdcAfter.set(itemContentKey, DataType.STRING, contentBase64);
-        itemAfter.setItemMeta(metaAfter);
-        */
     }
 
     public int countBackpacks(Player player) {
