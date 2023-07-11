@@ -51,7 +51,7 @@ public class ListenerOpenClose implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         EntityEquipment equipment = player.getEquipment();
@@ -75,7 +75,7 @@ public class ListenerOpenClose implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         ItemStack itemInHand = event.getItemInHand();
@@ -94,10 +94,10 @@ public class ListenerOpenClose implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
-        if(!plugin.getBackpackConfig().getHandling().isOpenThroughInventory()) {
+        if (!plugin.getBackpackConfig().getHandling().isOpenThroughInventory()) {
             return;
         }
         Inventory inventory = event.getClickedInventory();
@@ -116,14 +116,14 @@ public class ListenerOpenClose implements Listener {
             return;
         }
         boolean isBottomClick = InventoryUtils.isBottomClick(event.getRawSlot(), player);
-        if(!isBottomClick) {
+        if (!isBottomClick) {
             return;
         }
-        if(event.getClick() != ClickType.DOUBLE_CLICK) {
+        if (event.getClick() != ClickType.DOUBLE_CLICK) {
             return;
         }
         ItemStack cursorItem = event.getCursor();
-        if(!plugin.isBackpack(cursorItem)) {
+        if (!plugin.isBackpack(cursorItem)) {
             return;
         }
         event.setCancelled(true);
@@ -210,7 +210,7 @@ public class ListenerOpenClose implements Listener {
             if (disabledWorldNames.contains(worldName)
                     && !player.hasPermission(backpackConfig.getPermissions().getIgnoreWorldRestriction())) {
                 player.sendMessage(backpackConfig.getMessages().getNotAllowedToOpenInWorld()
-                                .replaceAll("%world_name%", worldName)
+                        .replaceAll("%world_name%", worldName)
                 );
             }
         }

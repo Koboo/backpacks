@@ -21,11 +21,12 @@ public class InventoryUtils {
 
     public int getTopSize(Player player) {
         Inventory top = player.getOpenInventory().getTopInventory();
-        if(top.getType() == InventoryType.CRAFTING) {
+        if (top.getType() == InventoryType.CRAFTING) {
             return 9;
         }
         return top.getSize();
     }
+
     public boolean isBottomClick(int rawSlot, Player player) {
         return getTopSize(player) <= rawSlot;
     }
@@ -33,7 +34,7 @@ public class InventoryUtils {
     public boolean isBottomDrag(Set<Integer> rawSlotSet, Player player) {
         int topSize = getTopSize(player);
         for (Integer rawSlot : rawSlotSet) {
-            if(rawSlot < topSize) {
+            if (rawSlot < topSize) {
                 continue;
             }
             return true;
@@ -46,7 +47,7 @@ public class InventoryUtils {
         Inventory top = view.getTopInventory();
         int lastTopSlot = top.getSize() - 1;
         for (Integer rawSlot : rawSlotSet) {
-            if(rawSlot >= lastTopSlot) {
+            if (rawSlot >= lastTopSlot) {
                 continue;
             }
             return true;

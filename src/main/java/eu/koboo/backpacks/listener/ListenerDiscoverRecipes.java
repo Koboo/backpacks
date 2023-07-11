@@ -23,7 +23,7 @@ public class ListenerDiscoverRecipes implements Listener {
             return;
         }
         Player player = event.getPlayer();
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         for (Keyed recipe : plugin.getRecipeKeyList()) {

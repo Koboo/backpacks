@@ -9,7 +9,7 @@ public interface TextureApplier {
     void applyTexture(BackpackColor color, SkullMeta skullMeta);
 
     static TextureApplier createApplier() {
-        if(PaperLib.isPaper()) {
+        if (PaperLib.isPaper()) {
             return new PaperTextureApplier();
         }
         return new SpigotTextureApplier();

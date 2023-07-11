@@ -233,7 +233,7 @@ public class BackpackPlugin extends JavaPlugin {
 
     public ItemStack createBackpack(BackpackColor color) {
 
-        if(color == null) {
+        if (color == null) {
             color = BackpackColor.NONE;
         }
 
@@ -351,7 +351,7 @@ public class BackpackPlugin extends JavaPlugin {
             count += topCount;
         }
         ItemStack onCursor = player.getItemOnCursor();
-        if(plugin.isBackpack(onCursor)) {
+        if (plugin.isBackpack(onCursor)) {
             count += 1;
         }
         return count;

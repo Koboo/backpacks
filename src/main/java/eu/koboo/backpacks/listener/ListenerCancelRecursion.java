@@ -34,7 +34,7 @@ public class ListenerCancelRecursion implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {
@@ -101,7 +101,7 @@ public class ListenerCancelRecursion implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {
@@ -114,8 +114,8 @@ public class ListenerCancelRecursion implements Listener {
         if (!plugin.hasOpenBackback(player)) {
             return;
         }
-        if(InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
-           return;
+        if (InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
+            return;
         }
         event.setResult(Event.Result.DENY);
         event.setCursor(cursorItem);

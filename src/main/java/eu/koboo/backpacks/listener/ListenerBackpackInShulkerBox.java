@@ -33,7 +33,7 @@ public class ListenerBackpackInShulkerBox implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowBackpackInShulker()) {
@@ -76,7 +76,7 @@ public class ListenerBackpackInShulkerBox implements Listener {
         if (affectedItem == null) {
             return;
         }
-        if(!plugin.isBackpack(affectedItem)) {
+        if (!plugin.isBackpack(affectedItem)) {
             return;
         }
         event.setCancelled(true);
@@ -93,22 +93,22 @@ public class ListenerBackpackInShulkerBox implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowShulkerInBackpack()) {
             return;
         }
         Inventory inventory = event.getInventory();
-        if(inventory.getType() != InventoryType.SHULKER_BOX) {
+        if (inventory.getType() != InventoryType.SHULKER_BOX) {
             return;
         }
         ItemStack cursorItem = event.getOldCursor();
-        if(!plugin.isBackpack(cursorItem)) {
+        if (!plugin.isBackpack(cursorItem)) {
             return;
         }
-        if(InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
-           return;
+        if (InventoryUtils.isBottomDrag(event.getRawSlots(), player)) {
+            return;
         }
         event.setResult(Event.Result.DENY);
         event.setCursor(cursorItem);

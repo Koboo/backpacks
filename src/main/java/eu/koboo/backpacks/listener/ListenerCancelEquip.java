@@ -34,7 +34,7 @@ public class ListenerCancelEquip implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         Inventory inventory = event.getInventory();
@@ -42,7 +42,7 @@ public class ListenerCancelEquip implements Listener {
         if (!(holder instanceof Player)) {
             return;
         }
-        if(inventory.getType() != InventoryType.CRAFTING) {
+        if (inventory.getType() != InventoryType.CRAFTING) {
             return;
         }
 
@@ -93,7 +93,7 @@ public class ListenerCancelEquip implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         Inventory inventory = event.getInventory();
@@ -101,10 +101,10 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         InventoryHolder holder = inventory.getHolder();
-        if(!(holder instanceof Player)) {
+        if (!(holder instanceof Player)) {
             return;
         }
-        if(!event.getRawSlots().contains(BackpackPlugin.HELMET_RAW_SLOT)) {
+        if (!event.getRawSlots().contains(BackpackPlugin.HELMET_RAW_SLOT)) {
             return;
         }
         ItemStack cursorItem = event.getOldCursor();

@@ -25,7 +25,7 @@ public class ListenerAutoClose implements Listener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (!plugin.getBackpackConfig().getHandling().isCloseOnDamage()) {
@@ -45,7 +45,7 @@ public class ListenerAutoClose implements Listener {
         if (!(event.getExited() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (!plugin.getBackpackConfig().getHandling().isCloseOnEject()) {

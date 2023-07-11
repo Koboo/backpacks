@@ -40,7 +40,7 @@ public class ListenerItemCraft implements Listener {
         if (!(event.getView().getPlayer() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (!plugin.isBackpack(resultItem)) {
@@ -65,7 +65,7 @@ public class ListenerItemCraft implements Listener {
         // Check if the player wants to craft a colored or a completely new backpack
         if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
-            if(!player.hasPermission(backpackConfig.getPermissions().getCraftDefaultBackpack())) {
+            if (!player.hasPermission(backpackConfig.getPermissions().getCraftDefaultBackpack())) {
                 player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftDefault());
                 event.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
@@ -88,7 +88,7 @@ public class ListenerItemCraft implements Listener {
             return;
         }
         // Crafting a colored backpack
-        if(!player.hasPermission(backpackConfig.getPermissions().getCraftColoredBackpack())) {
+        if (!player.hasPermission(backpackConfig.getPermissions().getCraftColoredBackpack())) {
             player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftColored());
             event.getInventory().setResult(new ItemStack(Material.AIR));
             return;

@@ -33,7 +33,7 @@ public class ListenerLimitAmount implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
@@ -42,7 +42,7 @@ public class ListenerLimitAmount implements Listener {
         }
 
         InventoryType topType = player.getOpenInventory().getTopInventory().getType();
-        if(topType == InventoryType.WORKBENCH) {
+        if (topType == InventoryType.WORKBENCH) {
             return;
         }
         ItemStack currentItem = event.getCurrentItem();
@@ -63,7 +63,7 @@ public class ListenerLimitAmount implements Listener {
         if (affectedItem == null && isBottomClick && (click == ClickType.LEFT || click == ClickType.RIGHT)) {
             affectedItem = cursorItem;
         }
-        if(!plugin.isBackpack(affectedItem)) {
+        if (!plugin.isBackpack(affectedItem)) {
             return;
         }
 
@@ -87,7 +87,7 @@ public class ListenerLimitAmount implements Listener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        if(player.getGameMode() == GameMode.SPECTATOR) {
+        if (player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
@@ -160,7 +160,7 @@ public class ListenerLimitAmount implements Listener {
             }
             overflow -= 1;
         }
-        if(dropped > 0) {
+        if (dropped > 0) {
             player.sendMessage(
                     plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
                             .replaceAll("%limit_amount%", String.valueOf(maxAmount))
@@ -238,7 +238,7 @@ public class ListenerLimitAmount implements Listener {
         // Check if the player wants to craft a colored backpack, in that case the result- and matrixItem is count as one
         // and we need to subtract one more backpack from the count
         boolean coloredCrafting = keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_");
-        if(coloredCrafting) {
+        if (coloredCrafting) {
             backpackCount -= 1;
         }
         if (backpackCount < maxAmount) {
