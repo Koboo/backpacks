@@ -35,5 +35,5 @@ public class Appearance {
             "See the list of available sounds:",
             "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html"
     })
-    Sounds sounds;
+    Sounds sounds = new Sounds();
 }
