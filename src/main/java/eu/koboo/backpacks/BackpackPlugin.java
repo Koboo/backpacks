@@ -105,6 +105,7 @@ public class BackpackPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        /*
         try {
             Class.forName("com.destroystokyo.paper.profile.PlayerProfile");
         } catch (Exception e) {
@@ -112,6 +113,7 @@ public class BackpackPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        */
 
         plugin = this;
 
