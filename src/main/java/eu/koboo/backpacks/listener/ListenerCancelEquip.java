@@ -10,10 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -62,8 +59,7 @@ public class ListenerCancelEquip implements Listener {
         PlayerInventory playerInventory = player.getInventory();
         // Shift equipping
         if (event.isShiftClick()
-                && slotType != InventoryType.SlotType.CONTAINER
-                && slotType != InventoryType.SlotType.QUICKBAR
+                && (slotType == InventoryType.SlotType.CONTAINER || slotType == InventoryType.SlotType.QUICKBAR)
                 && isBottomClick
                 && plugin.isBackpack(currentItem)) {
             // Custom shift handling for quality of life
@@ -73,7 +69,7 @@ public class ListenerCancelEquip implements Listener {
         }
         // Drag and Drop equipping
         if ((event.getClick() == ClickType.LEFT || event.getClick() == ClickType.RIGHT)
-                && slotType != InventoryType.SlotType.ARMOR
+                && slotType == InventoryType.SlotType.ARMOR
                 && !isBottomClick
                 && plugin.isBackpack(cursorItem)) {
             event.setCancelled(true);
@@ -101,7 +97,7 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         Inventory inventory = event.getInventory();
-        if (inventory.getType() != InventoryType.CRAFTING) {
+        if (inventory.getType() == InventoryType.CRAFTING) {
             return;
         }
         InventoryHolder holder = inventory.getHolder();
