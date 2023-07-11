@@ -5,6 +5,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -28,6 +29,9 @@ public class ListenerCancelRecursion implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {
@@ -92,6 +96,9 @@ public class ListenerCancelRecursion implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowRecursion()) {

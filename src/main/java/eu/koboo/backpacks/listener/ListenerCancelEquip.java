@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -29,6 +30,9 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         Inventory inventory = event.getInventory();
@@ -85,6 +89,9 @@ public class ListenerCancelEquip implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         Inventory inventory = event.getInventory();

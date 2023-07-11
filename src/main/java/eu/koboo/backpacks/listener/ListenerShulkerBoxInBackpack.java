@@ -5,6 +5,7 @@ import eu.koboo.backpacks.utils.InventoryUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
@@ -32,6 +33,9 @@ public class ListenerShulkerBoxInBackpack implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowShulkerBoxIn()) {
@@ -96,6 +100,9 @@ public class ListenerShulkerBoxInBackpack implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (plugin.getBackpackConfig().getRestrictions().isAllowShulkerBoxIn()) {

@@ -4,6 +4,7 @@ import eu.koboo.backpacks.BackpackPlugin;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,9 @@ public class ListenerAutoClose implements Listener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         if (!plugin.getBackpackConfig().getHandling().isCloseOnDamage()) {
             return;
         }
@@ -39,6 +43,9 @@ public class ListenerAutoClose implements Listener {
             return;
         }
         if (!(event.getExited() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (!plugin.getBackpackConfig().getHandling().isCloseOnEject()) {

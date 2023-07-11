@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -39,6 +40,9 @@ public class ListenerItemCraft implements Listener {
             return;
         }
         if (!(event.getView().getPlayer() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if (!plugin.isBackpack(resultItem)) {

@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,6 +32,9 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
@@ -82,6 +86,9 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();

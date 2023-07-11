@@ -62,6 +62,7 @@ public class BackpackPlugin extends JavaPlugin {
             - shulker box in backpack
             - backpack in shulker box
         - blacklisted items in backpacks
+        - Fix equipping in creative
         - More display config:
             - Show slots used
             - Show raw material list

@@ -15,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -53,6 +54,9 @@ public class ListenerOpenClose implements Listener {
             return;
         }
         Player player = event.getPlayer();
+        if(player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         EntityEquipment equipment = player.getEquipment();
         EquipmentSlot usedHand = event.getHand();
         if (usedHand == null) {
@@ -73,12 +77,16 @@ public class ListenerOpenClose implements Listener {
         if (event.isCancelled()) {
             return;
         }
+        Player player = event.getPlayer();
+        if(player.getGameMode() == GameMode.SPECTATOR) {
+            return;
+        }
         ItemStack itemInHand = event.getItemInHand();
         if (!plugin.isBackpack(itemInHand)) {
             return;
         }
         event.setCancelled(true);
-        openBackpack(event.getPlayer(), itemInHand);
+        openBackpack(player, itemInHand);
     }
 
     @EventHandler
@@ -87,6 +95,9 @@ public class ListenerOpenClose implements Listener {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player player)) {
+            return;
+        }
+        if(player.getGameMode() == GameMode.SPECTATOR) {
             return;
         }
         if(!plugin.getBackpackConfig().getHandling().isOpenThroughInventory()) {
