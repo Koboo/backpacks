@@ -15,6 +15,11 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public enum BackpackColor {
 
+    NONE(
+            "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTE2NWVlMTNhNjA2ZTFiNDQ2OTVhZjQ2YzM5YjUyY2U2NjY1N2E0YzRhNjIzZDBiMjgyYTdiOGNlMDUwOTQwNCJ9fX0=",
+            "https://textures.minecraft.net/texture/9165ee13a606e1b44695af46c39b52ce66657a4c4a623d0b282a7b8ce0509404",
+            null
+    ),
     // Light blue
     LIGHT_BLUE(
             "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2U1YWJkYjczNzQ1NTNkMDU2NWNiY2IzMjk1YWVkNTE1YTg5N2ViY2U5ZTBiYzYwZjFjMWY4YWU1NGM3NDlkZiJ9fX0=",
