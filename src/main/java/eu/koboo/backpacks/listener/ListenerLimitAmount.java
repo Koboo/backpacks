@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.*;
@@ -25,7 +26,7 @@ public class ListenerLimitAmount implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onLimitAmountBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;

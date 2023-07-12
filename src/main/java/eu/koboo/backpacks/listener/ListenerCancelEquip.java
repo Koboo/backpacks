@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,7 +27,7 @@ public class ListenerCancelEquip implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEquipBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
@@ -85,7 +86,7 @@ public class ListenerCancelEquip implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onEquipBackpackDrag(InventoryDragEvent event) {
         if (event.isCancelled()) {
             return;

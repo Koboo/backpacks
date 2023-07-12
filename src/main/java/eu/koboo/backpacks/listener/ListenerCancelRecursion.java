@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,7 +27,7 @@ public class ListenerCancelRecursion implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRecursionBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
@@ -93,7 +94,7 @@ public class ListenerCancelRecursion implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRecursionBackpackDrag(InventoryDragEvent event) {
         if (event.isCancelled()) {
             return;

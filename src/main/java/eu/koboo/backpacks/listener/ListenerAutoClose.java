@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -17,7 +18,7 @@ public class ListenerAutoClose implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onAutoCloseDamage(EntityDamageEvent event) {
         if (event.isCancelled()) {
             return;
@@ -37,7 +38,7 @@ public class ListenerAutoClose implements Listener {
         player.closeInventory();
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onAutoCloseExit(VehicleExitEvent event) {
         if (event.isCancelled()) {
             return;

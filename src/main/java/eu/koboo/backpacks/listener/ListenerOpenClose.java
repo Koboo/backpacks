@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -42,7 +43,7 @@ public class ListenerOpenClose implements Listener {
     BackpackPlugin plugin;
 
     // Handle backpack open event
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onOpenCloseInteractBackpack(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_AIR) {
             return;
@@ -69,7 +70,7 @@ public class ListenerOpenClose implements Listener {
     }
 
     // Handle backpack place (right-click on block)
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onOpenClosePlaceBackpack(BlockPlaceEvent event) {
         if (event.isCancelled()) {
             return;
@@ -86,7 +87,7 @@ public class ListenerOpenClose implements Listener {
         openBackpack(player, itemInHand);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onOpenCloseClickBackpack(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
@@ -134,7 +135,7 @@ public class ListenerOpenClose implements Listener {
     }
 
     // Handle backpack close event
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onOpenCloseBackpack(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) {
             return;

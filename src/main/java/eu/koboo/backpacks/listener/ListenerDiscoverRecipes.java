@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Keyed;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -17,7 +18,7 @@ public class ListenerDiscoverRecipes implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onJoinBackpack(PlayerJoinEvent event) {
         if (!plugin.getBackpackConfig().getCrafting().isDiscoverAllRecipes()) {
             return;

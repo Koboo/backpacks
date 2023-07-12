@@ -11,6 +11,7 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,7 +28,7 @@ public class ListenerShulkerBoxInBackpack implements Listener {
 
     BackpackPlugin plugin;
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onShulkerBoxInBackpackClick(InventoryClickEvent event) {
         if (event.isCancelled()) {
             return;
@@ -94,7 +95,7 @@ public class ListenerShulkerBoxInBackpack implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onShulkerBoxInBackpackDrag(InventoryDragEvent event) {
         if (event.isCancelled()) {
             return;

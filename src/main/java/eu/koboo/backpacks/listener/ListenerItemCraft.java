@@ -12,6 +12,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.CraftingInventory;
@@ -30,7 +31,7 @@ public class ListenerItemCraft implements Listener {
     BackpackPlugin plugin;
 
     // Make backpacks craft-able and unstackable
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onCraftBackpack(PrepareItemCraftEvent event) {
         CraftingInventory inventory = event.getInventory();
         ItemStack resultItem = inventory.getResult();
