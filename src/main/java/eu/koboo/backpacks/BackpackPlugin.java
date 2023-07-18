@@ -1,6 +1,7 @@
 package eu.koboo.backpacks;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
+import eu.koboo.backpacks.command.CommandBackpack;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
 import eu.koboo.backpacks.textures.TextureApplier;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.PluginLoadOrder;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.annotation.command.Command;
+import org.bukkit.plugin.java.annotation.command.Commands;
 import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
@@ -35,6 +38,9 @@ import java.util.logging.Level;
 @Description("PROJECT_DESCRIPTION")
 @LoadOrder(PluginLoadOrder.POSTWORLD)
 @Website("PROJECT_WEBSITE")
+@Commands({
+        @Command(name = "backpack")
+})
 @SuppressWarnings("all")
 public class BackpackPlugin extends JavaPlugin {
 
@@ -68,9 +74,9 @@ public class BackpackPlugin extends JavaPlugin {
         - Permissions for commands
         - Auto insert in chests, barrels, enderchests, trapped chest, shulker boxes
         - Backpack command
-            - Reload
-            - Give
-            - Recipe
+            - Reload    ( )
+            - Give      (Player [Color] [Size])
+            - Recipe    (Player)
         - More display config:
             - Show slots used
             - Show raw material list
@@ -139,6 +145,8 @@ public class BackpackPlugin extends JavaPlugin {
 
         metrics = new Metrics(this, BSTATS_ID);
 
+        getCommand("backpack").setExecutor(new CommandBackpack(this));
+
         super.onEnable();
     }
 
@@ -166,6 +174,7 @@ public class BackpackPlugin extends JavaPlugin {
             backpackConfig = configurationLoader.loadFromFile(Config.class, configFile);
             getLogger().log(Level.INFO, "Successful loaded configuration file!");
 
+            // TODO: Add config-version
             configurationLoader.saveToFile(backpackConfig, configFile);
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
