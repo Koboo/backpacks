@@ -14,13 +14,13 @@ public class Messages {
 
     @YamlKey("not-allowed-to-open")
     @YamlCommentHead({
-            "Player is not permitted to open the used backpack."
+            "Player is not permitted to open the current backpack."
     })
     String notAllowedToOpen = "§cYou're not allowed to open that backpack.";
 
     @YamlKey("exceeds-limit-amount")
     @YamlCommentHead({
-            "Player exceeds the set limit of backpack amount in own inventory."
+            "Player exceeds the maximum limit of backpacks in his inventory."
     })
     String exceedsLimitAmount = "§cYou're exceeding the maximum amount of %limit_amount% backpacks in your inventory.";
 
@@ -38,7 +38,7 @@ public class Messages {
 
     @YamlKey("not-allowed-in-world")
     @YamlCommentHead({
-            "Player is not permitted to open backpack in current world."
+            "Player is not permitted to open the backpack in the current world."
     })
     String notAllowedToOpenInWorld = "§cYou're not allowed to open the backpack in world %world_name%.";
 }

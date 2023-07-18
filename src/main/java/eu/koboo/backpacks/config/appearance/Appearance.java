@@ -16,22 +16,21 @@ public class Appearance {
     @YamlKey("allow-backpack-coloring")
     @YamlCommentHead({
             "Enabling this option allows the player",
-            "to craft different backpack colors by combining",
-            "any dye with a backpack."
+            "to craft different backpack-colors by combining",
+            "any default dye with a backpack in the crafting table."
     })
     boolean allowColoring = true;
 
     @YamlKey("default-backpack-name")
     @YamlCommentHead({
-            "Change the default name of a backpack",
-            "to allow your players more customization."
+            "Change the default name of a fresh crafted backpack."
     })
     String defaultBackpackName = "Backpack";
 
     @YamlEmbedded("sounds")
     @YamlCommentHead({
             "In this section you can change the sounds of the backpacks.",
-            "You can also use the command \"/playsound\" to test the sound you want.",
+            "You can also use the \"/playsound\" command to test the sound you want.",
             "See the list of available sounds:",
             "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html"
     })

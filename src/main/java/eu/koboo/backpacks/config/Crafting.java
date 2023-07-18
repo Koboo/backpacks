@@ -26,14 +26,14 @@ public class Crafting {
     @YamlKey("discover-all-recipes")
     @YamlCommentHead({
             "This option decides if the player should",
-            "discover all backpack recipes after he joined the server."
+            "discover all backpack crafting recipes at once, after he joined the server."
     })
     boolean discoverAllRecipes = true;
 
     @YamlKey("default-backpack-size")
     @YamlCommentHead({
-            "This option sets the size of all backpacks.",
-            "The value describes the amount of columns like chests.",
+            "This option sets the default size of all backpacks.",
+            "The value describes the amount of columns like in chests.",
             "Values:",
             "ONE, TWO, THREE, FOUR, FIVE, SIX"
     })
@@ -41,7 +41,8 @@ public class Crafting {
 
     @YamlKey("crafting-book-category")
     @YamlCommentHead({
-            "Set the category of the crafting recipes.",
+            "Set the category of the crafting recipes",
+            "in the recipe-book on the right side of the inventory.",
             "See this list:",
             "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/inventory/recipe/CraftingBookCategory.html"
     })
@@ -49,15 +50,15 @@ public class Crafting {
 
     @YamlKey("recipe-pattern")
     @YamlCommentHead({
-            "Sets the pattern for the backpack to be crafted.",
-            "Define the letters here and the item list below"
+            "Define the crafting pattern for a backpack.",
+            "Use the 3 lines like in a crafting-table and assign items in the list below."
     })
     List<String> craftingPattern = Arrays.asList("LLL", "SDS", "LLL");
 
     @YamlKey("recipe-items")
     @YamlCommentHead({
-            "Sets the required item for the backpack recipe.",
-            "Define the items here and the letters list below.",
+            "Define the required item for the backpack crafting-recipe.",
+            "Set a Material for every letter from the list above",
             "See list of items/materials:",
             "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html"
 

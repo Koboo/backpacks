@@ -15,7 +15,7 @@ public class Permissions {
     @YamlKey("ignore-owner-restriction")
     @YamlCommentHead({
             "This permission is used to check if the player can open the backpack.",
-            "!! Only takes action, if only owners can open backpacks !!"
+            "!! Only takes action, if only owners can open their backpacks !!"
     })
     String openEveryBackpack = "backpacks.ignore.owner.restriction";
 
@@ -27,7 +27,7 @@ public class Permissions {
 
     @YamlKey("craft-colored-backpacks")
     @YamlCommentHead({
-            "This permission is used to check if the player can craft the colored backpacks."
+            "This permission is used to check if the player can craft any colored backpacks."
     })
     String craftColoredBackpack = "backpacks.craft.colored";
 

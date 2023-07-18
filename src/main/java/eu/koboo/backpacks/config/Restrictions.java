@@ -18,23 +18,23 @@ public class Restrictions {
     @YamlKey("limit-amount-in-player-inventory")
     @YamlCommentHead({
             "Use this option to limit the amount of backpacks",
-            "a player can put into his inventory.",
+            "in a player inventory.",
             "",
-            "-1 equals no limit or max backpacks"
+            "-1 = no limit of backpacks / disabled"
     })
     int maxPlayerInventoryAmount = 2;
 
     @YamlKey("allow-backpack-in-backpack")
     @YamlCommentHead({
             "Use this option to choose if a player",
-            "can put a backpacks in a backpack in a backpack and so on.."
+            "can put a backpack in a backpack in a backpack and so on.."
     })
     boolean allowRecursion = false;
 
     @YamlKey("allow-shulker-box-in-backpack")
     @YamlCommentHead({
             "Use this option to choose if a player",
-            "can put a shulker boxes in a backpack."
+            "can put a shulker box in a backpack."
     })
     boolean allowShulkerInBackpack = false;
 

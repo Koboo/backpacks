@@ -24,16 +24,14 @@ public class Handling {
     @YamlKey("close-backpack-on-damage")
     @YamlCommentHead({
             "Set this to true, so players automatically",
-            "closes the currently open backpacks",
-            "after they get damaged by anything."
+            "close the currently open backpack after they get damaged."
     })
     boolean closeOnDamage = false;
 
     @YamlKey("close-backpack-on-eject")
     @YamlCommentHead({
             "Set this to true, so players automatically",
-            "closes the currently open backpacks",
-            "after they get eject from any vehicle"
+            "close the currently open backpack after they get eject from any vehicle or rideable animal."
     })
     boolean closeOnEject = false;
 }

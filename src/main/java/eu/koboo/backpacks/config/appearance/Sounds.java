@@ -16,14 +16,15 @@ public class Sounds {
 
     @YamlKey("sounds-enabled")
     @YamlCommentHead({
-            "Choose if it should a play a sound on opening or closing a backpack."
+            "Choose if it should a play the configured sound on opening or closing a backpack.",
+            "\"false\" to disable it"
     })
     boolean useSounds = true;
 
     @YamlKey("only-player-sounds")
     @YamlCommentHead({
             "true = only the player opening will hear the sound",
-            "false = every player in a certain radius will here the sound"
+            "false = every nearby player will here the sound"
     })
     boolean onlyPlayerSounds = true;
 
