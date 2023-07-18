@@ -109,15 +109,6 @@ public class BackpackPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        /*
-        try {
-            Class.forName("com.destroystokyo.paper.profile.PlayerProfile");
-        } catch (Exception e) {
-            getLogger().log(Level.WARNING, "You're not running PaperMC! Backpacks will only run on PaperMC. Shutting down..");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        */
 
         plugin = this;
 
