@@ -26,12 +26,12 @@ public class CommandBackpack implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
+        if (!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
             sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
             return false;
         }
-        if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            if(!sender.hasPermission(plugin.getPermissions().getCommandReload())) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            if (!sender.hasPermission(plugin.getPermissions().getCommandReload())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -39,16 +39,16 @@ public class CommandBackpack implements CommandExecutor {
             sender.sendMessage(plugin.getMessages().getCommandReloadSuccess());
             return false;
         }
-        if(args.length == 2 && args[0].equalsIgnoreCase("give")) {
-            if(!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+        if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
+            if (!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
             giveBackpack(sender, args[1], BackpackColor.NONE);
             return false;
         }
-        if(args.length == 3 && args[0].equalsIgnoreCase("give")) {
-            if(!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+        if (args.length == 3 && args[0].equalsIgnoreCase("give")) {
+            if (!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -66,7 +66,7 @@ public class CommandBackpack implements CommandExecutor {
 
     public void giveBackpack(CommandSender sender, String targetName, BackpackColor color) {
         Player target = Bukkit.getPlayer(targetName);
-        if(target == null) {
+        if (target == null) {
             sender.sendMessage(plugin.getMessages().getCommandPlayerNotOnline().replaceAll("%name%", targetName));
             return;
         }
@@ -84,14 +84,14 @@ public class CommandBackpack implements CommandExecutor {
 
         backpackItem.setItemMeta(resultMeta);
 
-        if(target.getInventory().firstEmpty() == -1) {
+        if (target.getInventory().firstEmpty() == -1) {
             target.getWorld().dropItem(target.getLocation(), backpackItem);
         } else {
             target.getInventory().addItem(backpackItem);
         }
 
         target.sendMessage(plugin.getMessages().getCommandGiveSuccess());
-        if(!sender.getName().equalsIgnoreCase(target.getName())) {
+        if (!sender.getName().equalsIgnoreCase(target.getName())) {
             sender.sendMessage(plugin.getMessages().getCommandGiveSuccessOther().replaceAll("%name%", ""));
         }
     }

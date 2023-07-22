@@ -14,7 +14,7 @@ public class Update {
 
     @YamlKey("notify-on-update")
     @YamlComment({
-            "Notify the users with the permissions if an update is available"
+            "Notify the users with the permissions if an update is available."
     })
     boolean notifyOnUpdate = true;
 }

@@ -140,7 +140,7 @@ public class BackpackPlugin extends JavaPlugin {
                 .setChangelogLink(SPIGOT_ID)
                 .setUserAgent(new UserAgentBuilder().addPluginNameAndVersion())
                 .checkNow();
-        if(backpackConfig.getUpdate().isNotifyOnUpdate()) {
+        if (backpackConfig.getUpdate().isNotifyOnUpdate()) {
             updateChecker.setNotifyOpsOnJoin(true)
                     .setNotifyByPermissionOnJoin(permissions.getUpdateNotify());
         }
