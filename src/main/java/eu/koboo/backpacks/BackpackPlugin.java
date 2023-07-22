@@ -85,7 +85,6 @@ public class BackpackPlugin extends JavaPlugin {
         - More display config:
             - Show slots used
             - Show raw material list
-         - Developer API (Events)
     */
 
     UpdateChecker updateChecker;

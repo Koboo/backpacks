@@ -14,7 +14,6 @@ import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.backpacks.utils.ItemUtils;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -36,7 +35,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -205,7 +203,7 @@ public class ListenerOpenClose implements Listener {
 
         BackpackCloseEvent closeEvent = new BackpackCloseEvent(player, backpackItem);
         Bukkit.getPluginManager().callEvent(closeEvent);
-        if(closeEvent.isCancelled()) {
+        if (closeEvent.isCancelled()) {
             player.openInventory(inventory);
             return;
         }
@@ -226,7 +224,7 @@ public class ListenerOpenClose implements Listener {
 
         Long cancelOpenUntil = cooldownMap.get(player.getUniqueId());
         long current = System.currentTimeMillis();
-        if(cancelOpenUntil != null && cancelOpenUntil > current) {
+        if (cancelOpenUntil != null && cancelOpenUntil > current) {
             player.sendMessage(plugin.getMessages().getOpenCooldown());
             return;
         }
@@ -235,7 +233,7 @@ public class ListenerOpenClose implements Listener {
         // Firing open event
         BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
         Bukkit.getPluginManager().callEvent(openEvent);
-        if(openEvent.isCancelled()) {
+        if (openEvent.isCancelled()) {
             return;
         }
 
