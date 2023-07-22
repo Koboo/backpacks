@@ -1,5 +1,6 @@
 package eu.koboo.backpacks.config;
 
+import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.config.appearance.Appearance;
 import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlEmbedded;
@@ -14,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Getter
 public class Config {
 
-    @YamlKey("config-version")
+    @YamlKey(BackpackPlugin.CONFIG_VERSION_KEY)
     @YamlComment("!! Do not touch this or it will break your config file !!")
     int configVersion = 1;
 
@@ -29,11 +30,4 @@ public class Config {
 
     @YamlEmbedded("handling")
     Handling handling = new Handling();
-
-    @YamlEmbedded("messages")
-    Messages messages = new Messages();
-
-    @YamlEmbedded("permissions")
-    Permissions permissions = new Permissions();
-
 }

@@ -1,5 +1,6 @@
 package eu.koboo.backpacks.config;
 
+import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
@@ -11,6 +12,16 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Getter
 public class Permissions {
+
+    @YamlKey(BackpackPlugin.PERMISSION_VERSION_KEY)
+    @YamlComment("!! Do not touch this or it will break your permission file !!")
+    int configVersion = 1;
+
+    @YamlKey("use-permissions")
+    @YamlComment({
+            "Enable or disable permission checks."
+    })
+    boolean usePermissions = false;
 
     @YamlKey("ignore-owner-restriction")
     @YamlComment({

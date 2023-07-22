@@ -1,5 +1,6 @@
 package eu.koboo.backpacks.config;
 
+import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
@@ -11,6 +12,10 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @Getter
 public class Messages {
+
+    @YamlKey(BackpackPlugin.MESSAGE_VERSION_KEY)
+    @YamlComment("!! Do not touch this or it will break your message file !!")
+    int configVersion = 1;
 
     @YamlKey("not-allowed-to-open")
     @YamlComment({

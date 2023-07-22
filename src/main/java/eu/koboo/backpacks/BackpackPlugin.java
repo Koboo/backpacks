@@ -6,11 +6,12 @@ import com.jeff_media.updatechecker.UpdateChecker;
 import com.jeff_media.updatechecker.UserAgentBuilder;
 import eu.koboo.backpacks.command.CommandBackpack;
 import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.config.Messages;
+import eu.koboo.backpacks.config.Permissions;
 import eu.koboo.backpacks.listener.*;
 import eu.koboo.backpacks.textures.TextureApplier;
 import eu.koboo.backpacks.utils.BackpackColor;
-import eu.koboo.yaml.YamlInstance;
-import eu.koboo.yaml.YamlLoader;
+import eu.koboo.yaml.migration.YamlMigration;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -32,7 +33,6 @@ import org.bukkit.plugin.java.annotation.plugin.*;
 import org.bukkit.plugin.java.annotation.plugin.author.Author;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -51,8 +51,12 @@ public class BackpackPlugin extends JavaPlugin {
     @Getter
     private static BackpackPlugin plugin;
 
-    public static final int BSTATS_ID = 19062;
-    public static final int SPIGOT_ID = 111152;
+    private static final int BSTATS_ID = 19062;
+    private static final int SPIGOT_ID = 111152;
+
+    public static final String CONFIG_VERSION_KEY = "config-version";
+    public static final String MESSAGE_VERSION_KEY = "message-version";
+    public static final String PERMISSION_VERSION_KEY = "permission-version";
 
     // If player has put a backpack into that inventories, he will collect another backpack,
     // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
@@ -93,6 +97,12 @@ public class BackpackPlugin extends JavaPlugin {
 
     @Getter
     Config backpackConfig;
+
+    @Getter
+    Messages messages;
+
+    @Getter
+    Permissions permissions;
 
     TextureApplier textureApplier;
 
@@ -161,30 +171,37 @@ public class BackpackPlugin extends JavaPlugin {
 
     public void reloadConfig() {
         getDataFolder().mkdirs();
-        File configFile = createConfigFile();
-        loadConfigFile(configFile);
+        loadFiles();
         createRecipes();
     }
 
-    private File createConfigFile() {
-        return new File(getDataFolder(), "config.yml");
-    }
+    private void loadFiles() {
+        YamlMigration configMigration = new YamlMigration();
+        backpackConfig = configMigration.migrateConfig(
+                Config.class,
+                new File(getDataFolder(), "config.yml"),
+                CONFIG_VERSION_KEY,
+                true,
+                true);
+        getLogger().log(Level.INFO, "Successful loaded config file!");
 
-    private void loadConfigFile(File configFile) {
-        YamlLoader loader = YamlInstance.getLoader();
-        try {
-            if (!configFile.exists()) {
-                loader.saveToFile(new Config(), configFile);
-                getLogger().log(Level.INFO, "Successful exported default configuration file..");
-            }
-            backpackConfig = loader.loadFromFile(Config.class, configFile);
-            getLogger().log(Level.INFO, "Successful loaded configuration file!");
+        YamlMigration messageMigration = new YamlMigration();
+        messages = messageMigration.migrateConfig(
+                Messages.class,
+                new File(getDataFolder(), "messages.yml"),
+                MESSAGE_VERSION_KEY,
+                true,
+                true);
+        getLogger().log(Level.INFO, "Successful loaded messages file!");
 
-            loader.saveToFile(backpackConfig, configFile);
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
-            Bukkit.getPluginManager().disablePlugin(this);
-        }
+        YamlMigration permissionMigration = new YamlMigration();
+        permissions = permissionMigration.migrateConfig(
+                Permissions.class,
+                new File(getDataFolder(), "permissons.yml"),
+                PERMISSION_VERSION_KEY,
+                true,
+                true);
+        getLogger().log(Level.INFO, "Successful loaded permissions file!");
     }
 
     private void createRecipes() {
