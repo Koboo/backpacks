@@ -9,7 +9,8 @@ import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
 import eu.koboo.backpacks.textures.TextureApplier;
 import eu.koboo.backpacks.utils.BackpackColor;
-import eu.koboo.yaml.config.ConfigurationLoader;
+import eu.koboo.yaml.YamlInstance;
+import eu.koboo.yaml.YamlLoader;
 import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -90,8 +91,6 @@ public class BackpackPlugin extends JavaPlugin {
 
     UpdateChecker updateChecker;
 
-    ConfigurationLoader configurationLoader;
-
     @Getter
     Config backpackConfig;
 
@@ -125,9 +124,6 @@ public class BackpackPlugin extends JavaPlugin {
         itemOwnerKey = NamespacedKey.fromString("backpack_owner", this);
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
-
-        getDataFolder().mkdirs();
-        configurationLoader = new ConfigurationLoader();
 
         reloadConfig();
 
@@ -164,6 +160,7 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public void reloadConfig() {
+        getDataFolder().mkdirs();
         File configFile = createConfigFile();
         loadConfigFile(configFile);
         createRecipes();
@@ -174,15 +171,16 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     private void loadConfigFile(File configFile) {
+        YamlLoader loader = YamlInstance.getLoader();
         try {
             if (!configFile.exists()) {
-                configurationLoader.saveToFile(new Config(), configFile);
+                loader.saveToFile(new Config(), configFile);
                 getLogger().log(Level.INFO, "Successful exported default configuration file..");
             }
-            backpackConfig = configurationLoader.loadFromFile(Config.class, configFile);
+            backpackConfig = loader.loadFromFile(Config.class, configFile);
             getLogger().log(Level.INFO, "Successful loaded configuration file!");
 
-            configurationLoader.saveToFile(backpackConfig, configFile);
+            loader.saveToFile(backpackConfig, configFile);
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
             Bukkit.getPluginManager().disablePlugin(this);

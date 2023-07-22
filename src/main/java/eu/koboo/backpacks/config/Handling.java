@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 public class Handling {
 
     @YamlKey("open-backpack-through-inventory")
-    @YamlCommentHead({
+    @YamlComment({
             "Set this to true, so players can open backpacks through ",
             "double-click on the item in their own inventory.",
             "It doesn't work if they click them e.g. in chests, hoppers, barrels, etc.",
@@ -22,14 +22,14 @@ public class Handling {
     boolean openThroughInventory = false;
 
     @YamlKey("close-backpack-on-damage")
-    @YamlCommentHead({
+    @YamlComment({
             "Set this to true, so players automatically",
             "close the currently open backpack after they get damaged."
     })
     boolean closeOnDamage = false;
 
     @YamlKey("close-backpack-on-eject")
-    @YamlCommentHead({
+    @YamlComment({
             "Set this to true, so players automatically",
             "close the currently open backpack after they get eject from any vehicle or rideable animal."
     })

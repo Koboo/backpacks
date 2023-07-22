@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config.appearance;
 
-import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlEmbedded;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class Appearance {
 
     @YamlKey("allow-backpack-coloring")
-    @YamlCommentHead({
+    @YamlComment({
             "Enabling this option allows the player",
             "to craft different backpack-colors by combining",
             "any default dye with a backpack in the crafting table."
@@ -22,13 +22,13 @@ public class Appearance {
     boolean allowColoring = true;
 
     @YamlKey("default-backpack-name")
-    @YamlCommentHead({
+    @YamlComment({
             "Change the default name of a fresh crafted backpack."
     })
     String defaultBackpackName = "Backpack";
 
     @YamlEmbedded("sounds")
-    @YamlCommentHead({
+    @YamlComment({
             "In this section you can change the sounds of the backpacks.",
             "You can also use the \"/playsound\" command to test the sound you want.",
             "See the list of available sounds:",

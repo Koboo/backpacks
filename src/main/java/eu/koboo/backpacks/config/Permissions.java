@@ -1,6 +1,6 @@
 package eu.koboo.backpacks.config;
 
-import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,26 +13,26 @@ import lombok.experimental.FieldDefaults;
 public class Permissions {
 
     @YamlKey("ignore-owner-restriction")
-    @YamlCommentHead({
+    @YamlComment({
             "This permission is used to check if the player can open the backpack.",
             "!! Only takes action, if only owners can open their backpacks !!"
     })
     String openEveryBackpack = "backpacks.ignore.owner.restriction";
 
     @YamlKey("craft-default-backpack")
-    @YamlCommentHead({
+    @YamlComment({
             "This permission is used to check if the player can craft the default backpack."
     })
     String craftDefaultBackpack = "backpacks.craft.default";
 
     @YamlKey("craft-colored-backpacks")
-    @YamlCommentHead({
+    @YamlComment({
             "This permission is used to check if the player can craft any colored backpacks."
     })
     String craftColoredBackpack = "backpacks.craft.colored";
 
     @YamlKey("ignore-world-restriction")
-    @YamlCommentHead({
+    @YamlComment({
             "This permission is used to check if the player can ignore the disabled worlds when opening backpacks.",
             "!! Only takes action, if player is in disabled world !!"
     })

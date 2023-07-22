@@ -1,7 +1,7 @@
 package eu.koboo.backpacks.config;
 
 import eu.koboo.backpacks.utils.BackpackSize;
-import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,20 +18,20 @@ import java.util.List;
 public class Crafting {
 
     @YamlKey("create-recipes")
-    @YamlCommentHead({
+    @YamlComment({
             "Enable or disable the creation of crafting recipes of backpacks."
     })
     boolean createRecipes = true;
 
     @YamlKey("discover-all-recipes")
-    @YamlCommentHead({
+    @YamlComment({
             "This option decides if the player should",
             "discover all backpack crafting recipes at once, after he joined the server."
     })
     boolean discoverAllRecipes = true;
 
     @YamlKey("default-backpack-size")
-    @YamlCommentHead({
+    @YamlComment({
             "This option sets the default size of all backpacks.",
             "The value describes the amount of columns like in chests.",
             "Values:",
@@ -40,7 +40,7 @@ public class Crafting {
     BackpackSize size = BackpackSize.THREE;
 
     @YamlKey("crafting-book-category")
-    @YamlCommentHead({
+    @YamlComment({
             "Set the category of the crafting recipes",
             "in the recipe-book on the right side of the inventory.",
             "See this list:",
@@ -49,14 +49,14 @@ public class Crafting {
     CraftingBookCategory category = CraftingBookCategory.EQUIPMENT;
 
     @YamlKey("recipe-pattern")
-    @YamlCommentHead({
+    @YamlComment({
             "Define the crafting pattern for a backpack.",
             "Use the 3 lines like in a crafting-table and assign items in the list below."
     })
     List<String> craftingPattern = Arrays.asList("LLL", "SDS", "LLL");
 
     @YamlKey("recipe-items")
-    @YamlCommentHead({
+    @YamlComment({
             "Define the required item for the backpack crafting-recipe.",
             "Set a Material for every letter from the list above",
             "See list of items/materials:",

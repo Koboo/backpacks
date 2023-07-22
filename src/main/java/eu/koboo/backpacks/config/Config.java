@@ -1,7 +1,7 @@
 package eu.koboo.backpacks.config;
 
 import eu.koboo.backpacks.config.appearance.Appearance;
-import eu.koboo.yaml.config.YamlCommentHead;
+import eu.koboo.yaml.config.YamlComment;
 import eu.koboo.yaml.config.YamlEmbedded;
 import eu.koboo.yaml.config.YamlKey;
 import lombok.AccessLevel;
@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 public class Config {
 
     @YamlKey("config-version")
-    @YamlCommentHead("!! Do not touch this or it will break your config file !!")
+    @YamlComment("!! Do not touch this or it will break your config file !!")
     int configVersion = 1;
 
     @YamlEmbedded("crafting")
