@@ -3,7 +3,6 @@ package eu.koboo.backpacks.command;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.utils.BackpackColor;
-import eu.koboo.backpacks.utils.BackpackSize;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -37,7 +36,7 @@ public class CommandBackpack implements CommandExecutor {
                 return false;
             }
             plugin.reloadConfig();
-            sender.sendMessage("You've reloaded the backpack config!");
+            sender.sendMessage(plugin.getMessages().getCommandReloadSuccess());
             return false;
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("give")) {
@@ -57,7 +56,7 @@ public class CommandBackpack implements CommandExecutor {
             try {
                 color = BackpackColor.valueOf(args[2].toUpperCase(Locale.ROOT));
             } catch (Exception e) {
-                sender.sendMessage("Couldn't find color " + args[2]);
+                sender.sendMessage(plugin.getMessages().getCommandColorNotFound().replaceAll("%color%", args[2]));
             }
             giveBackpack(sender, args[1], color);
             return false;
@@ -68,7 +67,7 @@ public class CommandBackpack implements CommandExecutor {
     public void giveBackpack(CommandSender sender, String targetName, BackpackColor color) {
         Player target = Bukkit.getPlayer(targetName);
         if(target == null) {
-            sender.sendMessage("Player " + targetName + " is not online.");
+            sender.sendMessage(plugin.getMessages().getCommandPlayerNotOnline().replaceAll("%name%", targetName));
             return;
         }
 
@@ -91,7 +90,9 @@ public class CommandBackpack implements CommandExecutor {
             target.getInventory().addItem(backpackItem);
         }
 
-        target.sendMessage("You got a new backpack!");
-        sender.sendMessage("You gave " + target.getName() + " a new backpack.");
+        target.sendMessage(plugin.getMessages().getCommandGiveSuccess());
+        if(!sender.getName().equalsIgnoreCase(target.getName())) {
+            sender.sendMessage(plugin.getMessages().getCommandGiveSuccessOther().replaceAll("%name%", ""));
+        }
     }
 }
