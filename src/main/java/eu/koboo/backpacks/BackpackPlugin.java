@@ -66,17 +66,17 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
+        - Split messages, permissions and config
+        - Command messages
+        - Config migration
         - Open cooldown
         - blacklisted items in backpacks
         - Fix equipping in creative
         - Create different slot types
-        - Permissions per color
-        - Permissions for commands
         - Auto insert in chests, barrels, enderchests, trapped chest, shulker boxes
         - Backpack command
-            - Reload    ( )
-            - Give      (Player [Color] [Size])
             - Recipe    (Player)
+            - Changeowner    (Player)
         - More display config:
             - Show slots used
             - Show raw material list
@@ -97,10 +97,6 @@ public class BackpackPlugin extends JavaPlugin {
     NamespacedKey itemUnstackableKey;
     @Getter
     NamespacedKey itemContentKey;
-    /*
-    @Getter
-    NamespacedKey itemSizeKey;
-    */
     @Getter
     NamespacedKey itemOwnerKey;
     @Getter
@@ -121,7 +117,6 @@ public class BackpackPlugin extends JavaPlugin {
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
         itemUnstackableKey = NamespacedKey.fromString("backpack_unstackable", this);
         itemContentKey = NamespacedKey.fromString("backpack_content", this);
-        //itemSizeKey = NamespacedKey.fromString("backpack_size", this);
         itemOwnerKey = NamespacedKey.fromString("backpack_owner", this);
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
@@ -174,7 +169,6 @@ public class BackpackPlugin extends JavaPlugin {
             backpackConfig = configurationLoader.loadFromFile(Config.class, configFile);
             getLogger().log(Level.INFO, "Successful loaded configuration file!");
 
-            // TODO: Add config-version
             configurationLoader.saveToFile(backpackConfig, configFile);
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Couldn't read configuration, shutting down:", e);
@@ -244,7 +238,6 @@ public class BackpackPlugin extends JavaPlugin {
 
         PersistentDataContainer pdc = skullMeta.getPersistentDataContainer();
         pdc.set(itemIdentifierKey, DataType.BOOLEAN, true);
-        //pdc.set(itemSizeKey, DataType.STRING, backpackConfig.getCrafting().getSize().name());
 
         headItem.setItemMeta(skullMeta);
         return headItem;

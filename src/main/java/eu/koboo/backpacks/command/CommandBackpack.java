@@ -80,12 +80,6 @@ public class CommandBackpack implements CommandExecutor {
         UUID resultBackpackId = UUID.randomUUID();
         resultPDC.set(plugin.getItemUnstackableKey(), DataType.UUID, resultBackpackId);
 
-        // Get the default size and set it in the results pdc
-        /*
-        BackpackSize defaultSize = backpackConfig.getCrafting().getSize();
-        resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
-        */
-
         // Setting the owners id on the backpack
         resultPDC.set(plugin.getItemOwnerKey(), DataType.UUID, target.getUniqueId());
 

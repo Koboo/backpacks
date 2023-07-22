@@ -241,12 +241,6 @@ public class ListenerOpenClose implements Listener {
 
         // Getting the backpack size from config or item directly
         BackpackSize backpackSize = backpackConfig.getCrafting().getSize();
-        /*
-        String sizeString = pdc.get(plugin.getItemSizeKey(), PersistentDataType.STRING);
-        if (sizeString != null) {
-            backpackSize = BackpackSize.valueOf(sizeString.toUpperCase(Locale.ROOT));
-        }
-        */
 
         // Creating the inventory by size and name
         Inventory inventory = Bukkit.createInventory(player, backpackSize.getSlotAmount(), inventoryName);

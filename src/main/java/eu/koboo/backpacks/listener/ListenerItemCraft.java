@@ -59,7 +59,6 @@ public class ListenerItemCraft implements Listener {
 
         Config backpackConfig = plugin.getBackpackConfig();
         NamespacedKey unstackableKey = plugin.getItemUnstackableKey();
-        //NamespacedKey sizeKey = plugin.getItemSizeKey();
         NamespacedKey contentKey = plugin.getItemContentKey();
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
@@ -75,12 +74,6 @@ public class ListenerItemCraft implements Listener {
             // Assign a new backpackId if the result doesn't have an id
             UUID resultBackpackId = UUID.randomUUID();
             resultPDC.set(unstackableKey, DataType.UUID, resultBackpackId);
-
-            // Get the default size and set it in the results pdc
-            /*
-            BackpackSize defaultSize = backpackConfig.getCrafting().getSize();
-            resultPDC.set(sizeKey, DataType.STRING, defaultSize.name());
-            */
 
             // Setting the owners id on the backpack
             resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
@@ -123,9 +116,7 @@ public class ListenerItemCraft implements Listener {
         // Setting backpack id
         copyValue(matrixPDC, resultPDC, unstackableKey, DataType.UUID);
 
-        // Setting the backpack size
-        //copyValue(matrixPDC, resultPDC, sizeKey, DataType.STRING);
-
+        // Setting owner id
         copyValue(matrixPDC, resultPDC, ownerKey, DataType.UUID);
 
         // Setting backpack name
