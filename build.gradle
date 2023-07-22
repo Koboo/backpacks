@@ -36,7 +36,12 @@ dependencies {
     implementation 'io.papermc:paperlib:1.0.7'
 
     implementation 'eu.koboo:yaml-config:1.2.9'
+
     implementation 'com.jeff_media:MorePersistentDataTypes:2.4.0'
+
+    // https://github.com/JEFF-Media-GbR/Spigot-UpdateChecker
+    implementation 'com.jeff_media:SpigotUpdateChecker:3.0.3'
+
     implementation 'org.bstats:bstats-bukkit:3.0.2'
 }
 
@@ -63,6 +68,7 @@ blossom {
 
 shadowJar {
     relocate 'com.jeff_media.morepersistentdatatypes', 'eu.koboo.backpacks.libs.morepersistentdatatypes'
+    relocate 'com.jeff_media.updatechecker', 'eu.koboo.backpacks.libs.updatechecker'
     relocate 'eu.koboo.yaml', 'eu.koboo.backpacks.libs.yaml'
     relocate 'io.papermc.lib', 'eu.koboo.backpacks.libs.paper'
 }

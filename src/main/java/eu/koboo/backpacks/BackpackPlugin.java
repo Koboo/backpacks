@@ -1,6 +1,8 @@
 package eu.koboo.backpacks;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
+import com.jeff_media.updatechecker.UpdateCheckSource;
+import com.jeff_media.updatechecker.UpdateChecker;
 import eu.koboo.backpacks.command.CommandBackpack;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
@@ -48,6 +50,7 @@ public class BackpackPlugin extends JavaPlugin {
     private static BackpackPlugin plugin;
 
     public static final int BSTATS_ID = 19062;
+    public static final int SPIGOT_ID = 111152;
 
     // If player has put a backpack into that inventories, he will collect another backpack,
     // so we need to drop other backpacks, because the backpack from the top inventory is put into his inventory.
@@ -80,9 +83,11 @@ public class BackpackPlugin extends JavaPlugin {
         - More display config:
             - Show slots used
             - Show raw material list
-         - UpdateNotification (console and permission)
+         - Add configuration for update-checker
          - Developer API (Events)
     */
+
+    UpdateChecker updateChecker;
 
     ConfigurationLoader configurationLoader;
 
@@ -111,7 +116,6 @@ public class BackpackPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         plugin = this;
 
         itemIdentifierKey = NamespacedKey.fromString("backpack_item", this);
@@ -125,6 +129,13 @@ public class BackpackPlugin extends JavaPlugin {
         configurationLoader = new ConfigurationLoader();
 
         reloadConfig();
+
+        updateChecker = new UpdateChecker(this, UpdateCheckSource.SPIGET, String.valueOf(SPIGOT_ID))
+                .checkEveryXHours(24)
+                .setDownloadLink(SPIGOT_ID)
+                .setChangelogLink(SPIGOT_ID)
+                .setNotifyOpsOnJoin(true)
+                .checkNow();
 
         textureApplier = TextureApplier.createApplier();
 
