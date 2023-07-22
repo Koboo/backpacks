@@ -82,6 +82,7 @@ public class BackpackPlugin extends JavaPlugin {
 
     /* TODO:
         - blacklisted items in backpacks
+        - Make command disable setting
         - Fix equipping in creative
         - Create different slot types
         - Auto insert in chests, barrels, enderchests, trapped chest, shulker boxes
