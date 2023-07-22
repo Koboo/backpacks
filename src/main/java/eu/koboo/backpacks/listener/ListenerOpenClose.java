@@ -8,6 +8,8 @@ import eu.koboo.backpacks.config.Permissions;
 import eu.koboo.backpacks.config.appearance.Appearance;
 import eu.koboo.backpacks.config.appearance.ConfigSound;
 import eu.koboo.backpacks.config.appearance.Sounds;
+import eu.koboo.backpacks.events.BackpackCloseEvent;
+import eu.koboo.backpacks.events.BackpackOpenEvent;
 import eu.koboo.backpacks.utils.BackpackSize;
 import eu.koboo.backpacks.utils.InventoryUtils;
 import eu.koboo.backpacks.utils.ItemUtils;
@@ -178,6 +180,7 @@ public class ListenerOpenClose implements Listener {
         // Resetting the open backpack id
         setOpenBackpackId(player, null);
 
+        // Playing sounds
         Sounds sounds = plugin.getBackpackConfig().getAppearance().getSounds();
         if (sounds.isUseSounds()) {
             ConfigSound closeSound = sounds.getCloseSound();
@@ -192,6 +195,12 @@ public class ListenerOpenClose implements Listener {
             }
         }
 
+        BackpackCloseEvent closeEvent = new BackpackCloseEvent(player, backpackItem);
+        Bukkit.getPluginManager().callEvent(closeEvent);
+        if(closeEvent.isCancelled()) {
+            player.openInventory(inventory);
+            return;
+        }
     }
 
     private void openBackpack(Player player, ItemStack backpackItem) {
@@ -263,9 +272,7 @@ public class ListenerOpenClose implements Listener {
         UUID backpackId = plugin.getBackpackIdByItem(backpackItem);
         setOpenBackpackId(player, backpackId);
 
-        // Opening the inventory of the backpack
-        player.openInventory(inventory);
-
+        // Playing sounds
         Sounds sounds = appearance.getSounds();
         if (sounds.isUseSounds()) {
             ConfigSound openSound = sounds.getOpenSound();
@@ -279,6 +286,15 @@ public class ListenerOpenClose implements Listener {
                 );
             }
         }
+
+        BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
+        Bukkit.getPluginManager().callEvent(openEvent);
+        if(openEvent.isCancelled()) {
+            return;
+        }
+
+        // Opening the inventory of the backpack
+        player.openInventory(inventory);
     }
 
     public UUID getOpenBackpackId(Player player) {
