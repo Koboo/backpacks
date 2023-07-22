@@ -51,11 +51,17 @@ public class BackpackPlugin extends JavaPlugin {
     @Getter
     private static BackpackPlugin plugin;
 
+    // ID of the plugin on bstats.org
     private static final int BSTATS_ID = 19062;
+
+    // ID of the plugin on spigotmc.org
     private static final int SPIGOT_ID = 111152;
 
+    // yaml key for version identification of config.yml
     public static final String CONFIG_VERSION_KEY = "config-version";
+    // yaml key for version identification of message.yml
     public static final String MESSAGE_VERSION_KEY = "message-version";
+    // yaml key for version identification of permission.yml
     public static final String PERMISSION_VERSION_KEY = "permission-version";
 
     // If player has put a backpack into that inventories, he will collect another backpack,
