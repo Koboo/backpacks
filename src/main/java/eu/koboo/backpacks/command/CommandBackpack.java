@@ -28,12 +28,12 @@ public class CommandBackpack implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!sender.hasPermission("backpacks.command")) {
-            sender.sendMessage("You dont have permissions to do that.");
+            sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
             return false;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             if(!sender.hasPermission("backpacks.command.reload")) {
-                sender.sendMessage("You dont have permissions to do that.");
+                sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
             plugin.reloadConfig();
@@ -42,7 +42,7 @@ public class CommandBackpack implements CommandExecutor {
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("give")) {
             if(!sender.hasPermission("backpacks.command.give")) {
-                sender.sendMessage("You dont have permissions to do that.");
+                sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
             giveBackpack(sender, args[1], BackpackColor.NONE);
@@ -50,7 +50,7 @@ public class CommandBackpack implements CommandExecutor {
         }
         if(args.length == 3 && args[0].equalsIgnoreCase("give")) {
             if(!sender.hasPermission("backpacks.command.give")) {
-                sender.sendMessage("You dont have permissions to do that.");
+                sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
             BackpackColor color = null;
