@@ -3,6 +3,7 @@ package eu.koboo.backpacks;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import com.jeff_media.updatechecker.UpdateCheckSource;
 import com.jeff_media.updatechecker.UpdateChecker;
+import com.jeff_media.updatechecker.UserAgentBuilder;
 import eu.koboo.backpacks.command.CommandBackpack;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.listener.*;
@@ -135,6 +136,7 @@ public class BackpackPlugin extends JavaPlugin {
                 .setDownloadLink(SPIGOT_ID)
                 .setChangelogLink(SPIGOT_ID)
                 .setNotifyOpsOnJoin(true)
+                .setUserAgent(new UserAgentBuilder().addPluginNameAndVersion())
                 .checkNow();
 
         textureApplier = TextureApplier.createApplier();
