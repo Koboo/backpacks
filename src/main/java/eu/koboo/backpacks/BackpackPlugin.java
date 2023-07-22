@@ -75,9 +75,7 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
-        - Split messages, permissions and config
         - Command messages
-        - Config migration
         - Open cooldown
         - blacklisted items in backpacks
         - Fix equipping in creative
@@ -89,7 +87,6 @@ public class BackpackPlugin extends JavaPlugin {
         - More display config:
             - Show slots used
             - Show raw material list
-         - Add configuration for update-checker
          - Developer API (Events)
     */
 
@@ -141,9 +138,12 @@ public class BackpackPlugin extends JavaPlugin {
                 .checkEveryXHours(24)
                 .setDownloadLink(SPIGOT_ID)
                 .setChangelogLink(SPIGOT_ID)
-                .setNotifyOpsOnJoin(true)
                 .setUserAgent(new UserAgentBuilder().addPluginNameAndVersion())
                 .checkNow();
+        if(backpackConfig.getUpdate().isNotifyOnUpdate()) {
+            updateChecker.setNotifyOpsOnJoin(true)
+                    .setNotifyByPermissionOnJoin(permissions.getUpdateNotify());
+        }
 
         textureApplier = TextureApplier.createApplier();
 

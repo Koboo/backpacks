@@ -23,6 +23,12 @@ public class Permissions {
     })
     boolean usePermissions = false;
 
+    @YamlKey("update-notification")
+    @YamlComment({
+            "This permission is used to check if the player will get notifications if an update is available.",
+    })
+    String updateNotify = "backpacks.update.notify";
+
     @YamlKey("ignore-owner-restriction")
     @YamlComment({
             "This permission is used to check if the player can open the backpack.",

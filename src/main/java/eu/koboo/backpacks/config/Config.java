@@ -19,6 +19,9 @@ public class Config {
     @YamlComment("!! Do not touch this or it will break your config file !!")
     int configVersion = 1;
 
+    @YamlEmbedded("update-check")
+    Update update = new Update();
+
     @YamlEmbedded("crafting")
     Crafting crafting = new Crafting();
 
