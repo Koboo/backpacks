@@ -74,7 +74,7 @@ public class ListenerLimitAmount implements Listener {
         }
         event.setCancelled(true);
         player.sendMessage(
-                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                plugin.getMessages().getExceedsLimitAmount()
                         .replaceAll("%limit_amount%", String.valueOf(maxAmount))
         );
     }
@@ -128,7 +128,7 @@ public class ListenerLimitAmount implements Listener {
             player.getWorld().dropItem(player.getLocation(), onCursor);
             player.setItemOnCursor(new ItemStack(Material.AIR));
             player.sendMessage(
-                    plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                    plugin.getMessages().getExceedsLimitAmount()
                             .replaceAll("%limit_amount%", String.valueOf(maxAmount))
             );
         }
@@ -163,7 +163,7 @@ public class ListenerLimitAmount implements Listener {
         }
         if (dropped > 0) {
             player.sendMessage(
-                    plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                    plugin.getMessages().getExceedsLimitAmount()
                             .replaceAll("%limit_amount%", String.valueOf(maxAmount))
             );
         }
@@ -246,7 +246,7 @@ public class ListenerLimitAmount implements Listener {
             return;
         }
         player.sendMessage(
-                plugin.getBackpackConfig().getMessages().getExceedsLimitAmount()
+                plugin.getMessages().getExceedsLimitAmount()
                         .replaceAll("%limit_amount%", String.valueOf(maxAmount))
         );
         event.getInventory().setResult(new ItemStack(Material.AIR));
