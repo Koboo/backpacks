@@ -54,4 +54,23 @@ public class Permissions {
             "!! Only takes action, if player is in disabled world !!"
     })
     String ignoreWorldRestriction = "backpacks.ignore.world.restriction";
+
+    @YamlKey("command-usage")
+    @YamlComment({
+            "This permission is used to check if the player can execute any command."
+    })
+    String commandUsage = "backpacks.command";
+
+    @YamlKey("command-reload")
+    @YamlComment({
+            "This permission is used to check if the player can execute the config reload command."
+    })
+    String commandReload = "backpacks.command.reload";
+
+    @YamlKey("command-give")
+    @YamlComment({
+            "This permission is used to check if the player can execute the give command."
+    })
+    String commandGive = "backpacks.command.give";
+
 }

@@ -27,12 +27,12 @@ public class CommandBackpack implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!sender.hasPermission("backpacks.command")) {
+        if(!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
             sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
             return false;
         }
         if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            if(!sender.hasPermission("backpacks.command.reload")) {
+            if(!sender.hasPermission(plugin.getPermissions().getCommandReload())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -41,7 +41,7 @@ public class CommandBackpack implements CommandExecutor {
             return false;
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("give")) {
-            if(!sender.hasPermission("backpacks.command.give")) {
+            if(!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -49,7 +49,7 @@ public class CommandBackpack implements CommandExecutor {
             return false;
         }
         if(args.length == 3 && args[0].equalsIgnoreCase("give")) {
-            if(!sender.hasPermission("backpacks.command.give")) {
+            if(!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
