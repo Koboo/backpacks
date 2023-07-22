@@ -17,7 +17,6 @@ import java.util.Map;
 @UtilityClass
 public class ItemUtils {
 
-
     public String toBase64(Inventory inventory) {
         try {
 
