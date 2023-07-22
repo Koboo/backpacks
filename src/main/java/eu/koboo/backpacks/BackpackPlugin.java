@@ -75,7 +75,6 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
-        - Command messages
         - Open cooldown
         - blacklisted items in backpacks
         - Fix equipping in creative

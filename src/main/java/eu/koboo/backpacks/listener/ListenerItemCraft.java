@@ -3,6 +3,8 @@ package eu.koboo.backpacks.listener;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.config.Messages;
+import eu.koboo.backpacks.config.Permissions;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -58,6 +60,9 @@ public class ListenerItemCraft implements Listener {
         PersistentDataContainer resultPDC = resultMeta.getPersistentDataContainer();
 
         Config backpackConfig = plugin.getBackpackConfig();
+        Messages messages = plugin.getMessages();
+        Permissions permissions = plugin.getPermissions();
+
         NamespacedKey unstackableKey = plugin.getItemUnstackableKey();
         NamespacedKey contentKey = plugin.getItemContentKey();
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
@@ -65,8 +70,8 @@ public class ListenerItemCraft implements Listener {
         // Check if the player wants to craft a colored or a completely new backpack
         if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
-            if (!player.hasPermission(backpackConfig.getPermissions().getCraftDefaultBackpack())) {
-                player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftDefault());
+            if (!player.hasPermission(permissions.getCraftDefaultBackpack())) {
+                player.sendMessage(messages.getNotAllowedToCraftDefault());
                 event.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
             }
@@ -82,8 +87,8 @@ public class ListenerItemCraft implements Listener {
             return;
         }
         // Crafting a colored backpack
-        if (!player.hasPermission(backpackConfig.getPermissions().getCraftColoredBackpack())) {
-            player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftColored());
+        if (!player.hasPermission(permissions.getCraftColoredBackpack())) {
+            player.sendMessage(messages.getNotAllowedToCraftColored());
             event.getInventory().setResult(new ItemStack(Material.AIR));
             return;
         }

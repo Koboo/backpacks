@@ -3,6 +3,8 @@ package eu.koboo.backpacks.listener;
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.config.Config;
+import eu.koboo.backpacks.config.Messages;
+import eu.koboo.backpacks.config.Permissions;
 import eu.koboo.backpacks.config.appearance.Appearance;
 import eu.koboo.backpacks.config.appearance.ConfigSound;
 import eu.koboo.backpacks.config.appearance.Sounds;
@@ -204,13 +206,15 @@ public class ListenerOpenClose implements Listener {
         }
 
         Config backpackConfig = plugin.getBackpackConfig();
+        Permissions permissions = plugin.getPermissions();
+        Messages messages = plugin.getMessages();
 
         List<String> disabledWorldNames = backpackConfig.getRestrictions().getDisabledWorldNames();
         if (disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
             String worldName = player.getWorld().getName();
             if (disabledWorldNames.contains(worldName)
-                    && !player.hasPermission(backpackConfig.getPermissions().getIgnoreWorldRestriction())) {
-                player.sendMessage(backpackConfig.getMessages().getNotAllowedToOpenInWorld()
+                    && !player.hasPermission(permissions.getIgnoreWorldRestriction())) {
+                player.sendMessage(messages.getNotAllowedToOpenInWorld()
                         .replaceAll("%world_name%", worldName)
                 );
             }
@@ -231,9 +235,9 @@ public class ListenerOpenClose implements Listener {
         if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
             UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
             if (ownerId != null) {
-                if (!player.hasPermission(backpackConfig.getPermissions().getOpenEveryBackpack())
+                if (!player.hasPermission(permissions.getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
-                    player.sendMessage(backpackConfig.getMessages().getNotAllowedToCraftColored());
+                    player.sendMessage(messages.getNotAllowedToCraftColored());
                     return;
                 }
             }
