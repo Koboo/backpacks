@@ -34,4 +34,11 @@ public class Handling {
             "close the currently open backpack after they get eject from any vehicle or rideable animal."
     })
     boolean closeOnEject = false;
+
+    @YamlKey("open-backpack-cooldown")
+    @YamlComment({
+            "Set the cooldown of the player opening backpacks.",
+            "The value is given in seconds."
+    })
+    int openCooldown = 1;
 }

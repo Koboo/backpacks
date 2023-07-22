@@ -36,15 +36,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-@RequiredArgsConstructor
 public class ListenerOpenClose implements Listener {
 
     BackpackPlugin plugin;
+    Map<UUID, Long> cooldownMap;
+
+    public ListenerOpenClose(BackpackPlugin plugin) {
+        this.plugin = plugin;
+        this.cooldownMap = new ConcurrentHashMap<>();
+    }
 
     // Handle backpack open event
     @EventHandler(priority = EventPriority.HIGH)
@@ -215,6 +223,22 @@ public class ListenerOpenClose implements Listener {
         }
 
         Config backpackConfig = plugin.getBackpackConfig();
+
+        Long cancelOpenUntil = cooldownMap.get(player.getUniqueId());
+        long current = System.currentTimeMillis();
+        if(cancelOpenUntil != null && cancelOpenUntil > current) {
+            player.sendMessage(plugin.getMessages().getOpenCooldown());
+            return;
+        }
+        cooldownMap.put(player.getUniqueId(), current + TimeUnit.SECONDS.toMillis(backpackConfig.getHandling().getOpenCooldown()));
+
+        // Firing open event
+        BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
+        Bukkit.getPluginManager().callEvent(openEvent);
+        if(openEvent.isCancelled()) {
+            return;
+        }
+
         Permissions permissions = plugin.getPermissions();
         Messages messages = plugin.getMessages();
 
@@ -246,7 +270,7 @@ public class ListenerOpenClose implements Listener {
             if (ownerId != null) {
                 if (!player.hasPermission(permissions.getOpenEveryBackpack())
                         && !player.getUniqueId().equals(ownerId)) {
-                    player.sendMessage(messages.getNotAllowedToCraftColored());
+                    player.sendMessage(messages.getNotAllowedToOpen());
                     return;
                 }
             }
@@ -285,12 +309,6 @@ public class ListenerOpenClose implements Listener {
                         player.getLocation(), openSound.getSound(), openSound.getVolume(), openSound.getPitch()
                 );
             }
-        }
-
-        BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
-        Bukkit.getPluginManager().callEvent(openEvent);
-        if(openEvent.isCancelled()) {
-            return;
         }
 
         // Opening the inventory of the backpack
