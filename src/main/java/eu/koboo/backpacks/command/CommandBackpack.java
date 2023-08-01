@@ -75,7 +75,7 @@ public class CommandBackpack implements CommandExecutor {
         ItemMeta resultMeta = backpackItem.getItemMeta();
         PersistentDataContainer resultPDC = resultMeta.getPersistentDataContainer();
 
-        // Assign a new backpackId if the result doesn't have an id
+        // Assign a new backpackId
         UUID resultBackpackId = UUID.randomUUID();
         resultPDC.set(plugin.getItemUnstackableKey(), DataType.UUID, resultBackpackId);
 
