@@ -8,9 +8,11 @@ Changelog of every version published on [SpigotMC](https://www.spigotmc.org/reso
 
 ### 1.0.2
 
+- Fixed several bugs
 - Added native spigot support
 - Removed "papermc required" check
 - Created "/backpack" command
+- Created "/backpack" tabcompletion
 - Splited config, permissions and messages into separate files
 - Added spigotmc update checker (Thanks to https://github.com/JEFF-Media-GbR/Spigot-UpdateChecker)
 - Created two new events
