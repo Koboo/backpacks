@@ -68,6 +68,7 @@ blossom {
 shadowJar {
     relocate 'com.jeff_media.morepersistentdatatypes', 'eu.koboo.backpacks.libs.morepersistentdatatypes'
     relocate 'com.jeff_media.updatechecker', 'eu.koboo.backpacks.libs.updatechecker'
+    relocate 'org.bstats', 'eu.koboo.backpacks.libs.bstats'
     relocate 'eu.koboo.yaml', 'eu.koboo.backpacks.libs.yaml'
     relocate 'io.papermc.lib', 'eu.koboo.backpacks.libs.paper'
 }
