@@ -15,11 +15,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
@@ -119,40 +121,40 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
             return null;
         }
         List<String> completionList = new ArrayList<>();
-        if(args.length == 1) {
+        if (args.length == 1) {
             String firstArg = args[0];
-            if("reload".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandReload())) {
+            if ("reload".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandReload())) {
                 completionList.add("reload");
             }
-            if("give".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if ("give".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 completionList.add("give");
             }
         }
-        if(args.length == 2) {
+        if (args.length == 2) {
             String firstArg = args[0];
             String secondArg = args[1];
-            if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if(!secondArg.startsWith(player.getName())) {
+                    if (!secondArg.startsWith(player.getName())) {
                         continue;
                     }
                     completionList.add(player.getName());
                 }
             }
         }
-        if(args.length == 3) {
+        if (args.length == 3) {
             String firstArg = args[0];
             String thirdArg = args[2];
-            if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 for (BackpackColor color : BackpackColor.values()) {
-                    if(!color.name().toLowerCase().startsWith(thirdArg)) {
+                    if (!color.name().toLowerCase().startsWith(thirdArg)) {
                         continue;
                     }
                     completionList.add(color.name().toLowerCase(Locale.ROOT));
                 }
             }
         }
-        if(completionList.isEmpty()) {
+        if (completionList.isEmpty()) {
             return null;
         }
         return completionList;

@@ -165,7 +165,7 @@ public class BackpackPlugin extends JavaPlugin {
         metrics = new Metrics(this, BSTATS_ID);
 
         PluginCommand pluginCommand = getCommand("backpack");
-        if(pluginCommand == null) {
+        if (pluginCommand == null) {
             getLogger().info("Couldn't register backpack plugin command! Disabling..");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -253,7 +253,7 @@ public class BackpackPlugin extends JavaPlugin {
 
         boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
         for (BackpackColor color : BackpackColor.values()) {
-            if(color == BackpackColor.NONE || color.getMaterial() == null) {
+            if (color == BackpackColor.NONE || color.getMaterial() == null) {
                 continue;
             }
             Bukkit.getServer().removeRecipe(color.getRecipeKey());
@@ -317,11 +317,11 @@ public class BackpackPlugin extends JavaPlugin {
             return findBackpackInInventoryById(view.getBottomInventory(), backpackId);
         }
         ItemStack onCursor = player.getItemOnCursor();
-        if(onCursor == null || onCursor.getType() == Material.AIR) {
+        if (onCursor == null || onCursor.getType() == Material.AIR) {
             return null;
         }
         UUID contentId = getBackpackIdByItem(onCursor);
-        if(contentId.equals(backpackId)) {
+        if (contentId.equals(backpackId)) {
             return onCursor;
         }
         return null;
