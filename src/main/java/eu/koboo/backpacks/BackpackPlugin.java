@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
@@ -81,6 +82,7 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
+        - TabCompleter in command
         - blacklisted items in backpacks
         - Make command disable setting
         - Fix equipping in creative
@@ -163,7 +165,15 @@ public class BackpackPlugin extends JavaPlugin {
 
         metrics = new Metrics(this, BSTATS_ID);
 
-        getCommand("backpack").setExecutor(new CommandBackpack(this));
+        PluginCommand pluginCommand = getCommand("backpack");
+        if(pluginCommand == null) {
+            getLogger().info("Couldn't register backpack plugin command! Disabling..");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        CommandBackpack commandBackpack = new CommandBackpack(this);
+        pluginCommand.setExecutor(commandBackpack);
+        pluginCommand.setTabCompleter(commandBackpack);
 
         super.onEnable();
     }

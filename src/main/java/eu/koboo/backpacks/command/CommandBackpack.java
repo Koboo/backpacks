@@ -10,17 +10,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class CommandBackpack implements CommandExecutor {
+public class CommandBackpack implements CommandExecutor, TabCompleter {
 
     BackpackPlugin plugin;
 
@@ -108,5 +111,48 @@ public class CommandBackpack implements CommandExecutor {
         }
         // Add item to inventory
         target.getInventory().addItem(itemStack);
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
+            return null;
+        }
+        List<String> completionList = new ArrayList<>();
+        if(args.length == 1) {
+            String firstArg = args[0];
+            if("reload".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandReload())) {
+                completionList.add("reload");
+            }
+            if("give".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+                completionList.add("give");
+            }
+        }
+        if(args.length == 2) {
+            String firstArg = args[0];
+            String secondArg = args[1];
+            if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if(secondArg.startsWith(player.getName())) {
+                        completionList.add(player.getName());
+                    }
+                }
+            }
+        }
+        if(args.length == 3) {
+            String firstArg = args[0];
+            String thirdArg = args[2];
+            if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+                for (BackpackColor color : BackpackColor.values()) {
+                    if(color.name().toLowerCase().startsWith(thirdArg)) {
+                        completionList.add(color.name().toLowerCase(Locale.ROOT));
+                    }
+                }
+            }
+        }
+        if(completionList.isEmpty()) {
+            return null;
+        }
+        return completionList;
     }
 }
