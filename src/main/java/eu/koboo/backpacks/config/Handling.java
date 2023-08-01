@@ -19,21 +19,21 @@ public class Handling {
             "It doesn't work if they click them e.g. in chests, hoppers, barrels, etc.",
             "They have to use it in their own inventory."
     })
-    boolean openThroughInventory = false;
+    boolean openThroughInventory = true;
 
     @YamlKey("close-backpack-on-damage")
     @YamlComment({
             "Set this to true, so players automatically",
             "close the currently open backpack after they get damaged."
     })
-    boolean closeOnDamage = false;
+    boolean closeOnDamage = true;
 
     @YamlKey("close-backpack-on-eject")
     @YamlComment({
             "Set this to true, so players automatically",
             "close the currently open backpack after they get eject from any vehicle or rideable animal."
     })
-    boolean closeOnEject = false;
+    boolean closeOnEject = true;
 
     @YamlKey("open-backpack-cooldown")
     @YamlComment({
