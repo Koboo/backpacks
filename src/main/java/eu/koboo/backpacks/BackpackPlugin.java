@@ -82,7 +82,6 @@ public class BackpackPlugin extends JavaPlugin {
     public static final int HELMET_RAW_SLOT = 5;
 
     /* TODO:
-        - TabCompleter in command
         - blacklisted items in backpacks
         - Make command disable setting
         - Fix equipping in creative
@@ -184,9 +183,11 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public void reloadConfig() {
+        getLogger().log(Level.INFO, "Reloading config file..");
         getDataFolder().mkdirs();
         loadFiles();
         createRecipes();
+        getLogger().log(Level.INFO, "Successful reloaded config file!");
     }
 
     private void loadFiles() {
@@ -197,7 +198,6 @@ public class BackpackPlugin extends JavaPlugin {
                 CONFIG_VERSION_KEY,
                 true,
                 true);
-        getLogger().log(Level.INFO, "Successful loaded config file!");
 
         YamlMigration messageMigration = new YamlMigration();
         messages = messageMigration.migrateConfig(
@@ -206,7 +206,6 @@ public class BackpackPlugin extends JavaPlugin {
                 MESSAGE_VERSION_KEY,
                 true,
                 true);
-        getLogger().log(Level.INFO, "Successful loaded messages file!");
 
         YamlMigration permissionMigration = new YamlMigration();
         permissions = permissionMigration.migrateConfig(
@@ -215,7 +214,6 @@ public class BackpackPlugin extends JavaPlugin {
                 PERMISSION_VERSION_KEY,
                 true,
                 true);
-        getLogger().log(Level.INFO, "Successful loaded permissions file!");
     }
 
     private void createRecipes() {
