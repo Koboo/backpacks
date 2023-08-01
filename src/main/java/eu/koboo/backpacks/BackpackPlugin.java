@@ -136,6 +136,8 @@ public class BackpackPlugin extends JavaPlugin {
         rootBackpackRecipeKey = NamespacedKey.fromString(RECIPE_KEY_PREFIX, this);
         openBackpackKey = NamespacedKey.fromString("backpack_open_backpack", this);
 
+        textureApplier = TextureApplier.createApplier();
+
         reloadConfig();
 
         updateChecker = new UpdateChecker(this, UpdateCheckSource.SPIGET, String.valueOf(SPIGOT_ID))
@@ -148,8 +150,6 @@ public class BackpackPlugin extends JavaPlugin {
             updateChecker.setNotifyOpsOnJoin(true)
                     .setNotifyByPermissionOnJoin(permissions.getUpdateNotify());
         }
-
-        textureApplier = TextureApplier.createApplier();
 
         Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerBackpackInShulkerBox(this), this);
@@ -245,6 +245,9 @@ public class BackpackPlugin extends JavaPlugin {
 
         boolean allowDifferentColors = backpackConfig.getAppearance().isAllowColoring();
         for (BackpackColor color : BackpackColor.values()) {
+            if(color == BackpackColor.NONE || color.getMaterial() == null) {
+                continue;
+            }
             Bukkit.getServer().removeRecipe(color.getRecipeKey());
             if (!allowDifferentColors) {
                 continue;
