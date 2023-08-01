@@ -133,9 +133,10 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
             String secondArg = args[1];
             if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if(secondArg.startsWith(player.getName())) {
-                        completionList.add(player.getName());
+                    if(!secondArg.startsWith(player.getName())) {
+                        continue;
                     }
+                    completionList.add(player.getName());
                 }
             }
         }
@@ -144,9 +145,10 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
             String thirdArg = args[2];
             if(firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
                 for (BackpackColor color : BackpackColor.values()) {
-                    if(color.name().toLowerCase().startsWith(thirdArg)) {
-                        completionList.add(color.name().toLowerCase(Locale.ROOT));
+                    if(!color.name().toLowerCase().startsWith(thirdArg)) {
+                        continue;
                     }
+                    completionList.add(color.name().toLowerCase(Locale.ROOT));
                 }
             }
         }
