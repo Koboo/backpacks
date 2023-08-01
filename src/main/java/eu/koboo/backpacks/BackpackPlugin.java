@@ -308,6 +308,14 @@ public class BackpackPlugin extends JavaPlugin {
         if (backpackItem == null) {
             return findBackpackInInventoryById(view.getBottomInventory(), backpackId);
         }
+        ItemStack onCursor = player.getItemOnCursor();
+        if(onCursor == null || onCursor.getType() == Material.AIR) {
+            return null;
+        }
+        UUID contentId = getBackpackIdByItem(onCursor);
+        if(contentId.equals(backpackId)) {
+            return onCursor;
+        }
         return null;
     }
 
@@ -335,10 +343,6 @@ public class BackpackPlugin extends JavaPlugin {
         PersistentDataContainer pdc = player.getPersistentDataContainer();
         UUID backpackId = pdc.get(openBackpackKey, DataType.UUID);
         if (backpackId == null) {
-            return false;
-        }
-        ItemStack itemInHand = findBackpackById(player, backpackId);
-        if (!isBackpack(itemInHand)) {
             return false;
         }
         return true;
