@@ -84,15 +84,29 @@ public class CommandBackpack implements CommandExecutor {
 
         backpackItem.setItemMeta(resultMeta);
 
-        if (target.getInventory().firstEmpty() == -1) {
-            target.getWorld().dropItem(target.getLocation(), backpackItem);
-        } else {
-            target.getInventory().addItem(backpackItem);
-        }
+        addBackpackItem(target, backpackItem);
 
         target.sendMessage(plugin.getMessages().getCommandGiveSuccess());
         if (!sender.getName().equalsIgnoreCase(target.getName())) {
             sender.sendMessage(plugin.getMessages().getCommandGiveSuccessOther().replaceAll("%name%", ""));
         }
+    }
+
+    private void addBackpackItem(Player target, ItemStack itemStack) {
+
+        // Check amount settings from config
+        int currentAmount = plugin.countBackpacks(target);
+        int maxAmount = plugin.getBackpackConfig().getRestrictions().getMaxPlayerInventoryAmount();
+        if (maxAmount != -1 && currentAmount >= maxAmount) {
+            target.getWorld().dropItem(target.getLocation(), itemStack);
+            return;
+        }
+        // Check full inventory of player
+        if (target.getInventory().firstEmpty() == -1) {
+            target.getWorld().dropItem(target.getLocation(), itemStack);
+            return;
+        }
+        // Add item to inventory
+        target.getInventory().addItem(itemStack);
     }
 }
