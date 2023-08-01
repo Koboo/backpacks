@@ -45,7 +45,7 @@ public class Messages {
     @YamlComment({
             "Player is not permitted to open the backpack in the current world."
     })
-    String notAllowedToOpenInWorld = "§cYou're not allowed to open the backpack in world %world_name%.";
+    String notAllowedToOpenInWorld = "§cYou're not allowed to open the backpack in the world %world_name%.";
 
     @YamlKey("open-cooldown")
     @YamlComment({
