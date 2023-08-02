@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.0.0'
     id 'net.kyori.blossom' version '1.2.0'
 }
@@ -70,5 +71,22 @@ shadowJar {
     relocate 'com.jeff_media.updatechecker', 'eu.koboo.backpacks.libs.updatechecker'
     relocate 'org.bstats', 'eu.koboo.backpacks.libs.bstats'
     relocate 'eu.koboo.yaml', 'eu.koboo.backpacks.libs.yaml'
-    relocate 'io.papermc.lib', 'eu.koboo.backpacks.libs.paper'
+}
+
+publishing {
+    repositories {
+        maven {
+            name 'koboo'
+            url 'https://reposilite.koboo.eu/releases'
+            credentials {
+                username System.getenv('REPO_USER')
+                password System.getenv('REPO_TOKEN')
+            }
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
