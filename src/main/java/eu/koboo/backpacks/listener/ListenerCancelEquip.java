@@ -105,7 +105,7 @@ public class ListenerCancelEquip implements Listener {
         if (!(holder instanceof Player)) {
             return;
         }
-        if (!event.getRawSlots().contains(BackpackPlugin.HELMET_RAW_SLOT)) {
+        if (!event.getRawSlots().contains(BackpackPlugin.NON_CREATIVE_HELMET_RAW_SLOT)) {
             return;
         }
         ItemStack cursorItem = event.getOldCursor();

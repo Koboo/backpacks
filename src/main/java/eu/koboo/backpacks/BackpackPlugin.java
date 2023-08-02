@@ -85,8 +85,8 @@ public class BackpackPlugin extends JavaPlugin {
     // The string key of the root recipe and the key prefix of the colored recipes
     public static final String RECIPE_KEY_PREFIX = "backpack_recipe";
 
-    // The raw slot of the helmet equipment slot in the player inventory
-    public static final int HELMET_RAW_SLOT = 5;
+    // The raw slot of the helmet equipment slot in the player inventory while not in creative.
+    public static final int NON_CREATIVE_HELMET_RAW_SLOT = 5;
 
     /* TODO:
         - blacklisted items in backpacks
