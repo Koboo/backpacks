@@ -2,6 +2,7 @@ package eu.koboo.backpacks.utils;
 
 import lombok.Getter;
 
+@SuppressWarnings("all")
 public class Platform {
 
     @Getter
