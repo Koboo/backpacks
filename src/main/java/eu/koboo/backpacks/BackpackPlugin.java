@@ -8,11 +8,12 @@ import eu.koboo.backpacks.command.CommandBackpack;
 import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.config.Messages;
 import eu.koboo.backpacks.config.Permissions;
-import eu.koboo.backpacks.listener.*;
+import eu.koboo.backpacks.listener.ListenerCancelEquip;
+import eu.koboo.backpacks.listener.ListenerLimitAmount;
 import eu.koboo.backpacks.listener.crafting.ListenerDiscoverRecipes;
 import eu.koboo.backpacks.listener.crafting.ListenerItemCraft;
-import eu.koboo.backpacks.listener.insertion.ListenerBackpackInShulkerBox;
 import eu.koboo.backpacks.listener.insertion.ListenerBackpackInBackpack;
+import eu.koboo.backpacks.listener.insertion.ListenerBackpackInShulkerBox;
 import eu.koboo.backpacks.listener.insertion.ListenerShulkerBoxInBackpack;
 import eu.koboo.backpacks.listener.openclose.ListenerAutoClose;
 import eu.koboo.backpacks.listener.openclose.ListenerOpenClose;
@@ -171,7 +172,7 @@ public class BackpackPlugin extends JavaPlugin {
 
         metrics = new Metrics(this, BSTATS_ID);
 
-        if(!backpackConfig.getHandling().isDisableBackpackCommand()) {
+        if (!backpackConfig.getHandling().isDisableBackpackCommand()) {
             PluginCommand pluginCommand = getCommand("backpack");
             if (pluginCommand == null) {
                 getLogger().info("Couldn't register backpack plugin command! Disabling..");

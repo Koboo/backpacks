@@ -87,10 +87,10 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
 
         // Setting the owners id on the backpack
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
-        if(resultPDC.has(ownerKey)) {
+        if (resultPDC.has(ownerKey)) {
             resultPDC.remove(ownerKey);
         }
-        if(plugin.getBackpackConfig().getHandling().isUseUniqueIds()) {
+        if (plugin.getBackpackConfig().getHandling().isUseUniqueIds()) {
             resultPDC.set(ownerKey, DataType.UUID, target.getUniqueId());
         } else {
             resultPDC.set(ownerKey, DataType.STRING, target.getName());
