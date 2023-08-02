@@ -18,6 +18,7 @@ import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -269,14 +270,18 @@ public class ListenerOpenClose implements Listener {
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
         // Check if the player is permitted to open the used backpack
-        if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen()) {
-            UUID ownerId = pdc.get(plugin.getItemOwnerKey(), DataType.UUID);
-            if (ownerId != null) {
-                if (!player.hasPermission(permissions.getOpenEveryBackpack())
-                        && !player.getUniqueId().equals(ownerId)) {
-                    player.sendMessage(messages.getNotAllowedToOpen());
-                    return;
-                }
+        if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen() && !player.hasPermission(permissions.getOpenEveryBackpack())) {
+            NamespacedKey ownerKey = plugin.getItemOwnerKey();
+            boolean hasOwnerUUID = pdc.has(ownerKey, DataType.UUID);
+            boolean hasOwnerName = pdc.has(ownerKey, DataType.STRING);
+            boolean useUniqueIds = backpackConfig.getHandling().isUseUniqueIds();
+            if (useUniqueIds && hasOwnerUUID && !player.getUniqueId().equals(pdc.get(ownerKey, DataType.UUID))) {
+                player.sendMessage(messages.getNotAllowedToOpen());
+                return;
+            }
+            if (!useUniqueIds && hasOwnerName && !player.getName().equals(pdc.get(ownerKey, DataType.STRING))) {
+                player.sendMessage(messages.getNotAllowedToOpen());
+                return;
             }
         }
 

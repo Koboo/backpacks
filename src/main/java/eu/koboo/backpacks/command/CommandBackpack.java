@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -85,7 +86,15 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
         resultPDC.set(plugin.getItemUnstackableKey(), DataType.UUID, resultBackpackId);
 
         // Setting the owners id on the backpack
-        resultPDC.set(plugin.getItemOwnerKey(), DataType.UUID, target.getUniqueId());
+        NamespacedKey ownerKey = plugin.getItemOwnerKey();
+        if(resultPDC.has(ownerKey)) {
+            resultPDC.remove(ownerKey);
+        }
+        if(plugin.getBackpackConfig().getHandling().isUseUniqueIds()) {
+            resultPDC.set(ownerKey, DataType.UUID, target.getUniqueId());
+        } else {
+            resultPDC.set(ownerKey, DataType.STRING, target.getName());
+        }
 
         backpackItem.setItemMeta(resultMeta);
 

@@ -48,6 +48,11 @@ public class Handling {
             "of the backpack is saved by uuid or by name.",
             "true = use uuid of the owner",
             "false = use name of the owner",
+            "",
+            "Backpacks with owner-uuids can't be changed to owner-names,",
+            "so the \"only-owner-can-open\" setting will have no effect on these!",
+            "Crafting the backpack with a new color can change that behaviour,",
+            "but also the owner of the backpack."
     })
     boolean useUniqueIds = true;
 

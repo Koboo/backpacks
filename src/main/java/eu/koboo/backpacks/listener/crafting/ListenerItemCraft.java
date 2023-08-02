@@ -2,7 +2,6 @@ package eu.koboo.backpacks.listener.crafting;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;
-import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.config.Messages;
 import eu.koboo.backpacks.config.Permissions;
 import lombok.AccessLevel;
@@ -59,7 +58,6 @@ public class ListenerItemCraft implements Listener {
         }
         PersistentDataContainer resultPDC = resultMeta.getPersistentDataContainer();
 
-        Config backpackConfig = plugin.getBackpackConfig();
         Messages messages = plugin.getMessages();
         Permissions permissions = plugin.getPermissions();
 
@@ -68,6 +66,7 @@ public class ListenerItemCraft implements Listener {
         NamespacedKey ownerKey = plugin.getItemOwnerKey();
 
         // Check if the player wants to craft a colored or a completely new backpack
+        boolean useOwnerUniqueIds = plugin.getBackpackConfig().getHandling().isUseUniqueIds();
         if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
             if (!player.hasPermission(permissions.getCraftDefaultBackpack())) {
@@ -81,7 +80,11 @@ public class ListenerItemCraft implements Listener {
             resultPDC.set(unstackableKey, DataType.UUID, resultBackpackId);
 
             // Setting the owners id on the backpack
-            resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
+            if (useOwnerUniqueIds) {
+                resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
+            } else {
+                resultPDC.set(ownerKey, DataType.STRING, player.getName());
+            }
 
             resultItem.setItemMeta(resultMeta);
             return;
@@ -115,6 +118,22 @@ public class ListenerItemCraft implements Listener {
         ItemMeta matrixMeta = matrixItem.getItemMeta();
         PersistentDataContainer matrixPDC = matrixMeta.getPersistentDataContainer();
 
+        // Don't color backpacks that are not your property!
+        if (useOwnerUniqueIds
+                && !player.hasPermission(plugin.getPermissions().getOpenEveryBackpack())
+                && matrixPDC.has(ownerKey, DataType.UUID)
+                && !player.getUniqueId().equals(matrixPDC.get(ownerKey, DataType.UUID))) {
+            event.getInventory().setResult(new ItemStack(Material.AIR));
+            return;
+        }
+        if (!useOwnerUniqueIds
+                && !player.hasPermission(plugin.getPermissions().getOpenEveryBackpack())
+                && matrixPDC.has(ownerKey, DataType.STRING)
+                && !player.getName().equals(matrixPDC.get(ownerKey, DataType.STRING))) {
+            event.getInventory().setResult(new ItemStack(Material.AIR));
+            return;
+        }
+
         // Setting backpack content
         copyValue(matrixPDC, resultPDC, contentKey, DataType.STRING);
 
@@ -122,7 +141,21 @@ public class ListenerItemCraft implements Listener {
         copyValue(matrixPDC, resultPDC, unstackableKey, DataType.UUID);
 
         // Setting owner id
-        copyValue(matrixPDC, resultPDC, ownerKey, DataType.UUID);
+        if (useOwnerUniqueIds) {
+            if (matrixPDC.has(ownerKey, DataType.UUID)) {
+                copyValue(matrixPDC, resultPDC, ownerKey, DataType.UUID);
+            } else {
+                matrixPDC.remove(ownerKey);
+                resultPDC.set(ownerKey, DataType.UUID, player.getUniqueId());
+            }
+        } else {
+            if (matrixPDC.has(ownerKey, DataType.STRING)) {
+                copyValue(matrixPDC, resultPDC, ownerKey, DataType.STRING);
+            } else {
+                matrixPDC.remove(ownerKey);
+                resultPDC.set(ownerKey, DataType.STRING, player.getName());
+            }
+        }
 
         // Setting backpack name
         if (matrixMeta.hasDisplayName()) {
