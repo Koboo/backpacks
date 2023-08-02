@@ -396,10 +396,10 @@ public class BackpackPlugin extends JavaPlugin {
     }
 
     public boolean hasBackpackPermission(CommandSender sender, String permission) {
-        if(!permissions.isUsePermissions()) {
+        if (!permissions.isUsePermissions()) {
             return true;
         }
-        if(sender.isOp()) {
+        if (sender.isOp()) {
             return true;
         }
         return plugin.hasBackpackPermission(sender, permission);
