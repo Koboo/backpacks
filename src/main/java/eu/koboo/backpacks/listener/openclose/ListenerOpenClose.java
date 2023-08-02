@@ -235,7 +235,7 @@ public class ListenerOpenClose implements Listener {
             return;
         }
 
-        // Firing open event
+        // Firing and handling open event
         BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
         Bukkit.getPluginManager().callEvent(openEvent);
         if (openEvent.isCancelled()) {
@@ -247,14 +247,13 @@ public class ListenerOpenClose implements Listener {
 
         // Check for any disabled worlds in the config.
         List<String> disabledWorldNames = backpackConfig.getRestrictions().getDisabledWorldNames();
-        if (disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
-            String worldName = player.getWorld().getName();
-            if (disabledWorldNames.contains(worldName)
-                    && !player.hasPermission(permissions.getIgnoreWorldRestriction())) {
-                player.sendMessage(messages.getNotAllowedToOpenInWorld()
-                        .replaceAll("%world_name%", worldName)
-                );
-            }
+        String worldName = player.getWorld().getName();
+        if (disabledWorldNames != null
+                && disabledWorldNames.contains(worldName)
+                && !plugin.hasBackpackPermission(player, permissions.getIgnoreWorldRestriction())) {
+            player.sendMessage(messages.getNotAllowedToOpenInWorld()
+                    .replaceAll("%world_name%", worldName)
+            );
         }
 
         // Getting the inventory name by item or config
@@ -270,7 +269,7 @@ public class ListenerOpenClose implements Listener {
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
 
         // Check if the player is permitted to open the used backpack
-        if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen() && !player.hasPermission(permissions.getOpenEveryBackpack())) {
+        if (backpackConfig.getRestrictions().isOnlyOwnerCanOpen() && !plugin.hasBackpackPermission(player, permissions.getOpenEveryBackpack())) {
             NamespacedKey ownerKey = plugin.getItemOwnerKey();
             boolean hasOwnerUUID = pdc.has(ownerKey, DataType.UUID);
             boolean hasOwnerName = pdc.has(ownerKey, DataType.STRING);

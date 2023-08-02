@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
@@ -91,12 +92,10 @@ public class BackpackPlugin extends JavaPlugin {
 
     /* TODO:
         - blacklisted items in backpacks
-        - Make command disable setting
         - Fix equipping in creative
-        - Create different slot types
+        - Create different slot sizes
         - Auto insert in chests, barrels, enderchests, trapped chest, shulker boxes
         - Backpack command
-            - Recipe    (Player)
             - Changeowner    (Player)
         - More display config:
             - Show slots used
@@ -394,5 +393,15 @@ public class BackpackPlugin extends JavaPlugin {
             count += 1;
         }
         return count;
+    }
+
+    public boolean hasBackpackPermission(CommandSender sender, String permission) {
+        if(!permissions.isUsePermissions()) {
+            return true;
+        }
+        if(sender.isOp()) {
+            return true;
+        }
+        return plugin.hasBackpackPermission(sender, permission);
     }
 }

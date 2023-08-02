@@ -69,7 +69,7 @@ public class ListenerItemCraft implements Listener {
         boolean useOwnerUniqueIds = plugin.getBackpackConfig().getHandling().isUseUniqueIds();
         if (!keyed.getKey().getKey().startsWith(BackpackPlugin.RECIPE_KEY_PREFIX + "_")) {
             // Crafting a new backpack
-            if (!player.hasPermission(permissions.getCraftDefaultBackpack())) {
+            if (!plugin.hasBackpackPermission(player, permissions.getCraftDefaultBackpack())) {
                 player.sendMessage(messages.getNotAllowedToCraftDefault());
                 event.getInventory().setResult(new ItemStack(Material.AIR));
                 return;
@@ -90,7 +90,7 @@ public class ListenerItemCraft implements Listener {
             return;
         }
         // Crafting a colored backpack
-        if (!player.hasPermission(permissions.getCraftColoredBackpack())) {
+        if (!plugin.hasBackpackPermission(player, permissions.getCraftColoredBackpack())) {
             player.sendMessage(messages.getNotAllowedToCraftColored());
             event.getInventory().setResult(new ItemStack(Material.AIR));
             return;
@@ -120,14 +120,14 @@ public class ListenerItemCraft implements Listener {
 
         // Don't color backpacks that are not your property!
         if (useOwnerUniqueIds
-                && !player.hasPermission(plugin.getPermissions().getOpenEveryBackpack())
+                && !plugin.hasBackpackPermission(player, plugin.getPermissions().getOpenEveryBackpack())
                 && matrixPDC.has(ownerKey, DataType.UUID)
                 && !player.getUniqueId().equals(matrixPDC.get(ownerKey, DataType.UUID))) {
             event.getInventory().setResult(new ItemStack(Material.AIR));
             return;
         }
         if (!useOwnerUniqueIds
-                && !player.hasPermission(plugin.getPermissions().getOpenEveryBackpack())
+                && !plugin.hasBackpackPermission(player, plugin.getPermissions().getOpenEveryBackpack())
                 && matrixPDC.has(ownerKey, DataType.STRING)
                 && !player.getName().equals(matrixPDC.get(ownerKey, DataType.STRING))) {
             event.getInventory().setResult(new ItemStack(Material.AIR));

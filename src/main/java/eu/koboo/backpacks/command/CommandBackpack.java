@@ -32,12 +32,12 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
+        if (!plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandUsage())) {
             sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
             return false;
         }
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-            if (!sender.hasPermission(plugin.getPermissions().getCommandReload())) {
+            if (!plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandReload())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -46,7 +46,7 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
             return false;
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
-            if (!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (!plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -54,7 +54,7 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
             return false;
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("give")) {
-            if (!sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (!plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandGive())) {
                 sender.sendMessage(plugin.getMessages().getCommandNoPermissions());
                 return false;
             }
@@ -126,23 +126,23 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!sender.hasPermission(plugin.getPermissions().getCommandUsage())) {
+        if (!plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandUsage())) {
             return null;
         }
         List<String> completionList = new ArrayList<>();
         if (args.length == 1) {
             String firstArg = args[0];
-            if ("reload".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandReload())) {
+            if ("reload".startsWith(firstArg) && plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandReload())) {
                 completionList.add("reload");
             }
-            if ("give".startsWith(firstArg) && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if ("give".startsWith(firstArg) && plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandGive())) {
                 completionList.add("give");
             }
         }
         if (args.length == 2) {
             String firstArg = args[0];
             String secondArg = args[1];
-            if (firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (firstArg.equalsIgnoreCase("give") && plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandGive())) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (!secondArg.startsWith(player.getName())) {
                         continue;
@@ -154,7 +154,7 @@ public class CommandBackpack implements CommandExecutor, TabCompleter {
         if (args.length == 3) {
             String firstArg = args[0];
             String thirdArg = args[2];
-            if (firstArg.equalsIgnoreCase("give") && sender.hasPermission(plugin.getPermissions().getCommandGive())) {
+            if (firstArg.equalsIgnoreCase("give") && plugin.hasBackpackPermission(sender, plugin.getPermissions().getCommandGive())) {
                 for (BackpackColor color : BackpackColor.values()) {
                     if (!color.name().toLowerCase().startsWith(thirdArg)) {
                         continue;
