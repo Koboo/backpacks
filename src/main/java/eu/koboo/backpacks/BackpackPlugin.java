@@ -171,15 +171,17 @@ public class BackpackPlugin extends JavaPlugin {
 
         metrics = new Metrics(this, BSTATS_ID);
 
-        PluginCommand pluginCommand = getCommand("backpack");
-        if (pluginCommand == null) {
-            getLogger().info("Couldn't register backpack plugin command! Disabling..");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
+        if(!backpackConfig.getHandling().isDisableBackpackCommand()) {
+            PluginCommand pluginCommand = getCommand("backpack");
+            if (pluginCommand == null) {
+                getLogger().info("Couldn't register backpack plugin command! Disabling..");
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
+            }
+            CommandBackpack commandBackpack = new CommandBackpack(this);
+            pluginCommand.setExecutor(commandBackpack);
+            pluginCommand.setTabCompleter(commandBackpack);
         }
-        CommandBackpack commandBackpack = new CommandBackpack(this);
-        pluginCommand.setExecutor(commandBackpack);
-        pluginCommand.setTabCompleter(commandBackpack);
 
         super.onEnable();
     }
