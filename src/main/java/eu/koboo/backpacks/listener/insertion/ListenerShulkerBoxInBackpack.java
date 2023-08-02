@@ -1,4 +1,4 @@
-package eu.koboo.backpacks.listener;
+package eu.koboo.backpacks.listener.insertion;
 
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.utils.InventoryUtils;

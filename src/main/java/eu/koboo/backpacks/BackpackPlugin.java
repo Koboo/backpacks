@@ -9,6 +9,9 @@ import eu.koboo.backpacks.config.Config;
 import eu.koboo.backpacks.config.Messages;
 import eu.koboo.backpacks.config.Permissions;
 import eu.koboo.backpacks.listener.*;
+import eu.koboo.backpacks.listener.insertion.ListenerBackpackInShulkerBox;
+import eu.koboo.backpacks.listener.insertion.ListenerBackpackInBackpack;
+import eu.koboo.backpacks.listener.insertion.ListenerShulkerBoxInBackpack;
 import eu.koboo.backpacks.textures.TextureApplier;
 import eu.koboo.backpacks.utils.BackpackColor;
 import eu.koboo.yaml.migration.YamlMigration;
@@ -155,7 +158,7 @@ public class BackpackPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ListenerAutoClose(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerBackpackInShulkerBox(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerCancelEquip(this), this);
-        Bukkit.getPluginManager().registerEvents(new ListenerCancelRecursion(this), this);
+        Bukkit.getPluginManager().registerEvents(new ListenerBackpackInBackpack(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerDiscoverRecipes(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerItemCraft(this), this);
         Bukkit.getPluginManager().registerEvents(new ListenerLimitAmount(this), this);

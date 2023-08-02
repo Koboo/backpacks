@@ -1,4 +1,4 @@
-package eu.koboo.backpacks.listener;
+package eu.koboo.backpacks.listener.insertion;
 
 import eu.koboo.backpacks.BackpackPlugin;
 import eu.koboo.backpacks.utils.InventoryUtils;
@@ -23,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RequiredArgsConstructor
-public class ListenerCancelRecursion implements Listener {
+public class ListenerBackpackInBackpack implements Listener {
 
     BackpackPlugin plugin;
 
