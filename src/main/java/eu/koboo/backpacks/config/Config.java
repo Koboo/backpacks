@@ -17,7 +17,7 @@ public class Config {
 
     @YamlKey(BackpackPlugin.CONFIG_VERSION_KEY)
     @YamlComment("!! Do not touch this or it will break your config file !!")
-    int configVersion = 1;
+    int configVersion = 2;
 
     @YamlEmbedded("update-check")
     Update update = new Update();

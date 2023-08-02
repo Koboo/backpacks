@@ -41,4 +41,19 @@ public class Handling {
             "The value is given in seconds."
     })
     int openCooldown = 1;
+
+    @YamlKey("use-owner-uuid-instead-of-name")
+    @YamlComment({
+            "Use this option to decide if the owner",
+            "of the backpack is saved by uuid or by name.",
+            "true = use uuid of the owner",
+            "false = use name of the owner",
+    })
+    boolean useUniqueIds = true;
+
+    @YamlKey("disable-backpack-command")
+    @YamlComment({
+            "Set this to true, to disable the \"backpack\" command completely.",
+    })
+    boolean disableBackpackCommand = false;
 }
