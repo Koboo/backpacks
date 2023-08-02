@@ -1,4 +1,4 @@
-package eu.koboo.backpacks.listener;
+package eu.koboo.backpacks.listener.crafting;
 
 import com.jeff_media.morepersistentdatatypes.DataType;
 import eu.koboo.backpacks.BackpackPlugin;

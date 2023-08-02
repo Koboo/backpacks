@@ -2,13 +2,11 @@ package eu.koboo.backpacks.utils;
 
 import lombok.Getter;
 
+@Getter
 public class Platform {
 
-    @Getter
     private static boolean spigot;
-    @Getter
     private static boolean paper;
-    @Getter
     private static boolean folia;
 
     static {

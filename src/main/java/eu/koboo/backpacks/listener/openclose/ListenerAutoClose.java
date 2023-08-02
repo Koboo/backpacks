@@ -1,4 +1,4 @@
-package eu.koboo.backpacks.listener;
+package eu.koboo.backpacks.listener.openclose;
 
 import eu.koboo.backpacks.BackpackPlugin;
 import lombok.AccessLevel;
