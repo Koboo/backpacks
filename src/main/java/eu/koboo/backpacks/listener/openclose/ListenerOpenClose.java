@@ -165,6 +165,18 @@ public class ListenerOpenClose implements Listener {
             return;
         }
 
+        // Firing close event and checking we the player can actually close the inventory.
+        BackpackCloseEvent closeEvent = new BackpackCloseEvent(player, backpackItem);
+        Bukkit.getPluginManager().callEvent(closeEvent);
+        if (closeEvent.isCancelled()) {
+            Bukkit.getScheduler().runTask(plugin, () -> player.openInventory(inventory));
+            return;
+        }
+
+        // Setting cooldown on close.
+        cooldownMap.put(player.getUniqueId(),
+                System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(plugin.getBackpackConfig().getHandling().getOpenCooldown()));
+
         String contentBase64 = ItemUtils.toBase64(inventory);
 
         ItemMeta itemMeta = backpackItem.getItemMeta();
@@ -200,13 +212,6 @@ public class ListenerOpenClose implements Listener {
                 );
             }
         }
-
-        BackpackCloseEvent closeEvent = new BackpackCloseEvent(player, backpackItem);
-        Bukkit.getPluginManager().callEvent(closeEvent);
-        if (closeEvent.isCancelled()) {
-            player.openInventory(inventory);
-            return;
-        }
     }
 
     private void openBackpack(Player player, ItemStack backpackItem) {
@@ -221,14 +226,13 @@ public class ListenerOpenClose implements Listener {
         }
 
         Config backpackConfig = plugin.getBackpackConfig();
-
+        // Check for open cooldown.
         Long cancelOpenUntil = cooldownMap.get(player.getUniqueId());
         long current = System.currentTimeMillis();
         if (cancelOpenUntil != null && cancelOpenUntil > current) {
             player.sendMessage(plugin.getMessages().getOpenCooldown());
             return;
         }
-        cooldownMap.put(player.getUniqueId(), current + TimeUnit.SECONDS.toMillis(backpackConfig.getHandling().getOpenCooldown()));
 
         // Firing open event
         BackpackOpenEvent openEvent = new BackpackOpenEvent(player, backpackItem);
@@ -240,6 +244,7 @@ public class ListenerOpenClose implements Listener {
         Permissions permissions = plugin.getPermissions();
         Messages messages = plugin.getMessages();
 
+        // Check for any disabled worlds in the config.
         List<String> disabledWorldNames = backpackConfig.getRestrictions().getDisabledWorldNames();
         if (disabledWorldNames != null && !disabledWorldNames.isEmpty()) {
             String worldName = player.getWorld().getName();
@@ -250,6 +255,7 @@ public class ListenerOpenClose implements Listener {
                 );
             }
         }
+
         // Getting the inventory name by item or config
         String inventoryName = null;
         if (itemMeta.hasDisplayName()) {
