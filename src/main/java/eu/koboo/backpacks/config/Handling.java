@@ -59,6 +59,7 @@ public class Handling {
     @YamlKey("disable-backpack-command")
     @YamlComment({
             "Set this to true, to disable the \"backpack\" command completely.",
+            "!! To let the setting take effect, you need to restart the server !!"
     })
     boolean disableBackpackCommand = false;
 }
